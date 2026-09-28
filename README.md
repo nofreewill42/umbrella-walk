@@ -75,7 +75,14 @@ The cuts are timed to a specific piece of music, and **the music is not in this 
 
 For a free stand-in, `python3 tools/guide_track.py` synthesises `audio/guide.wav`: a rough jazz sketch at the same tempo, with stops and hits on the picture's big moments (the chop, the umbrella snap, the taxi splash, the first raindrop, the pounce). Render with it using `python3 tools/render_film.py --audio audio/guide.wav`. It also works as an audio reference for a music generator, so a new score keeps the same structure.
 
-`python3 tools/sfx_track.py` synthesises the sound effects (every event in the film, plus street and rain ambience) into `audio/sfx.wav`, and mixes them under the guide track into `audio/guide_sfx.wav`. Use `--music FILE` (a 44.1 kHz wav) to mix them under another soundtrack instead.
+`python3 tools/sfx_track.py` synthesises the sound effects and ambience into `audio/sfx.wav`, and mixes them under the guide track into `audio/guide_sfx.wav` (`--music FILE.wav` mixes them under your own music instead). There are no samples: every sound is a small physical model, so the whole track is free to use.
+
+- **Voices** (`tools/sfxanimals.py`): a glottal pulse source with jitter, shimmer and breath, filtered by a cat-, dog-, pigeon- or child-sized vocal tract. The purr is the cat's larynx buzzing at ~24 Hz on the out-breath and a little faster on the in-breath.
+- **Everything else** (`tools/sfxworld.py`): rain as tens of thousands of tiny impacts plus bubbles in puddles; splashes and drips from Minnaert bubble resonances; the scaffold rail's clang from the bending modes of a steel tube; a coin and a glass jar from disc and bell modes; scrapes as stick-slip friction; the van as diesel firing pulses (with a slightly uneven cylinder) through an exhaust, and a starter motor that labours on each compression; the taxi as a moving source with real travel-time delay (so the Doppler shift is physical), 1/r loudness and air absorption; distant thunder as the N-waves from a kilometres-long crooked lightning channel; a tower bell with its hum, prime, minor-third tierce and nominal.
+- **Footsteps come from the drawings.** `python3 tools/probe_motion.py` runs the film, watches every character's feet and writes each moment a foot lands to `audio/steps.json`, with where it is on screen and how hard it came down. Re-run it after changing a walk.
+- **Rooms.** Each shot has an acoustic space (street, park, embankment, building site, close-up) with its own reverb, and a distance cue dulls and wets far-off sounds.
+
+The generators' default parameters were tuned by an automatic listener: an AudioSet sound classifier (CED-mini, run with sherpa-onnx) scored thousands of variations of each sound, and the search kept what it heard as a meow, a purr, rain, a clang, a car and so on, and penalised anything it heard as music or a synthesizer. For a few sounds the classifier also picked the best of several takes (the `seed`s you'll see in `sfx_track.py`). No one listened with human ears while tuning, so trust yours: every level and timing is a plain number in `tools/sfx_track.py`.
 
 ## How it's built
 
@@ -90,8 +97,10 @@ src/        the film (plain JS, concatenated in this order by tools/build.py)
   s2.js       shots 6-10
   s3.js       shots 11-19
   main.js     the timeline: renderFrame(ctx, t)
-audio/      cuts.json (shot boundaries, the one source of timing), beats.json
+audio/      cuts.json (shot boundaries, the one source of timing), beats.json, steps.json (footfalls)
 tools/      build.py, preview.py, render_film.py, render_segment.py
+            guide_track.py, sfx_track.py (the sound), sfxdsp.py, sfxanimals.py, sfxworld.py (the sound models),
+            probe_motion.py (finds the footfalls in the picture)
 ```
 
 `dist/` (the built script) and `out/` (stills and videos) are generated and not committed.

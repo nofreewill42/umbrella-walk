@@ -21,8 +21,9 @@ python3 -m playwright install chromium     # add --with-deps on a fresh Linux bo
 | Render the whole film | `python3 tools/render_film.py` (to `out/umbrella_walk.mp4`) |
 | Temp soundtrack with the hit points | `python3 tools/guide_track.py`, then `render_film.py --audio audio/guide.wav` |
 | Sound effects (and a mix with the music) | `python3 tools/sfx_track.py [--music FILE.wav]` writes `audio/sfx.wav` and `audio/<music>_sfx.wav` |
+| Footfalls for the sound, measured from the picture | `python3 tools/probe_motion.py` writes `audio/steps.json` (re-run after changing any walk) |
 
-When you change a shot's timing, move its sound effects too: they are placed with `T(shot, seconds)` in `tools/sfx_track.py`, and the hit points in `tools/guide_track.py`.
+When you change a shot's timing, move its sound effects too: they are placed with `T(shot, seconds)` in `tools/sfx_track.py`, and the hit points in `tools/guide_track.py`. Sounds are physical models in `tools/sfxworld.py` and `tools/sfxanimals.py`; `put(sound, time, L, pan, far)` places one with a loudness target `L` in dB (footsteps sit around -40, a splash around -15).
 
 `preview.py` writes `out/preview.jpg`. **Always open that image and look at it** after a change. Most mistakes in this film are visual, and only show up in the picture. A full render takes ~3 minutes on 4 cores; a preview takes seconds.
 

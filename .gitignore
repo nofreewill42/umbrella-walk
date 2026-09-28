@@ -13,3 +13,4 @@ audio/soundtrack.*
 # rendered video
 *.mp4
 .DS_Store
+.lab/
