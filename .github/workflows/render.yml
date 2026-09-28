@@ -1,0 +1,30 @@
+name: Render film
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['src/**', 'tools/**', 'audio/**', '.github/workflows/render.yml']
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Install Playwright and Chromium
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+      - name: Render
+        run: python tools/render_film.py --workers 4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: umbrella_walk
+          path: out/umbrella_walk.mp4
+          retention-days: 30

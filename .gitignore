@@ -1,0 +1,15 @@
+# generated
+dist/
+out/
+__pycache__/
+*.pyc
+
+# the soundtrack is not ours to redistribute (see README -> Sound)
+audio/soundtrack.*
+*.wav
+*.mp3
+*.m4a
+
+# rendered video
+*.mp4
+.DS_Store
