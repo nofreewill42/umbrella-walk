@@ -75,6 +75,8 @@ The cuts are timed to a specific piece of music, and **the music is not in this 
 
 For a free stand-in, `python3 tools/guide_track.py` synthesises `audio/guide.wav`: a rough jazz sketch at the same tempo, with stops and hits on the picture's big moments (the chop, the umbrella snap, the taxi splash, the first raindrop, the pounce). Render with it using `python3 tools/render_film.py --audio audio/guide.wav`. It also works as an audio reference for a music generator, so a new score keeps the same structure.
 
+`python3 tools/sfx_track.py` synthesises the sound effects (every event in the film, plus street and rain ambience) into `audio/sfx.wav`, and mixes them under the guide track into `audio/guide_sfx.wav`. Use `--music FILE` (a 44.1 kHz wav) to mix them under another soundtrack instead.
+
 ## How it's built
 
 ```
