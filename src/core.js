@@ -195,9 +195,23 @@ function locks(ctx, pts, curl = .25, start = true) {
 }
 
 // ===== shot registry =====
-// cut points (frames) on the beat grid of the extended soundtrack
-// shot boundaries in frames; tools/build.py replaces this line with the values in audio/cuts.json
-const CUTS = [0,  99,  171,  243,  327,  472,  615,  723,  831,  939,  1060,  1168,  1263,  1359,  1456,  1504,  1563,  1624,  1709,  1839];
+// The film's timing lives in timeline.json (shot boundaries and each shot's named moments).
+// tools/build.py writes that file into the next line.
+const TIMELINE = { fps: 24, shots: [] };
+// shot boundaries in frames: shot i runs from CUTS[i - 1] up to CUTS[i]
+const CUTS = TIMELINE.shots.map(s => s.from).concat(TIMELINE.shots.length ? [TIMELINE.shots[TIMELINE.shots.length - 1].to] : []);
+// a shot's named moments, in seconds from the start of that shot:
+//   const { T_HOOK, T_GO } = MOMENTS('Wet concrete');
+// a moment is a number or a list of numbers (usually [start, end])
+const _MOMENTS = {};
+function MOMENTS(name) {
+  if (_MOMENTS[name]) return _MOMENTS[name];
+  const s = TIMELINE.shots.find(q => q.name === name);
+  if (!s) throw new Error('no shot called "' + name + '" in timeline.json');
+  const o = {};
+  for (const k in s.moments) o[k] = s.moments[k].t;
+  return (_MOMENTS[name] = o);
+}
 const CUT = i => [CUTS[i - 1] / 24, CUTS[i] / 24];   // shot i (1-based): [t0, t1]
 const SHOTS = [];
 function shot(name, t0, t1, draw, o = {}) { SHOTS.push(Object.assign({ name, t0, t1, draw }, o)); }

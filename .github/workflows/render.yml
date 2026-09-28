@@ -1,10 +1,13 @@
 name: Render film
 
+# Renders the whole film with sound on every push that changes it (or from the Actions tab:
+# Render film -> Run workflow). The MP4 and the sound tracks appear under Artifacts on the run.
+
 on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['src/**', 'tools/**', 'audio/**', '.github/workflows/render.yml']
+    paths: ['src/**', 'tools/**', 'audio/**', 'timeline.json', '.github/workflows/render.yml']
 
 jobs:
   render:
@@ -17,14 +20,22 @@ jobs:
           python-version: '3.12'
       - name: Install ffmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
-      - name: Install Playwright and Chromium
+      - name: Install Python packages and Chromium
         run: |
           pip install -r requirements.txt
           python -m playwright install --with-deps chromium
+      - name: Sound (footfalls from the picture, guide music, effects)
+        run: |
+          python tools/probe_motion.py
+          python tools/guide_track.py
+          python tools/sfx_track.py
       - name: Render
-        run: python tools/render_film.py --workers 4
+        run: python tools/render_film.py --workers 4 --audio audio/guide_sfx.wav
       - uses: actions/upload-artifact@v4
         with:
           name: umbrella_walk
-          path: out/umbrella_walk.mp4
+          path: |
+            out/umbrella_walk.mp4
+            audio/sfx.wav
+            audio/guide_sfx.wav
           retention-days: 30

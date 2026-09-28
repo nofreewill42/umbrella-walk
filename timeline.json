@@ -1,0 +1,311 @@
+{
+ "about": [
+  "The film's timing in one place. tools/build.py puts it into the picture, and tools/sfx_track.py and tools/guide_track.py read it, so moving a moment here moves the drawing, its sound and its music hit together.",
+  "from / to: the shot's first frame and the frame after its last (24 fps). Each cut sits one frame before a beat of the music (audio/beats.json).",
+  "moments: seconds from the start of the shot. t is one time or a list of times (usually start and end). The names are the constants the shot's code uses.",
+  "space: the acoustic space of the shot (see SPACES in tools/sfx_track.py)."
+ ],
+ "fps": 24,
+ "shots": [
+  {
+   "n": 1,
+   "name": "Top hat",
+   "from": 0,
+   "to": 99,
+   "space": "street",
+   "summary": "A gust takes a gentleman's hat; he catches it on the umbrella tip, spins it and flicks it back onto his head.",
+   "moments": {
+    "T_OFF": {"t": 0.55, "what": "the gust lifts the hat off the gentleman's head"},
+    "T_SEAT": {"t": 1.75, "what": "the hat drops onto the umbrella tip"},
+    "T_SPIN": {"t": 1.92, "what": "he spins it on the tip"},
+    "T_FLICK": {"t": 2.9, "what": "he flicks it back towards the gentleman"},
+    "T_HEAD": {"t": 3.32, "what": "it lands on the gentleman's head (he flinches)"},
+    "T_SIP": {"t": [3.55, 3.8, 4.125], "what": "sip: cup starts up, at the mouth, (still drinking at the cut)"}
+   }
+  },
+  {
+   "n": 2,
+   "name": "Scooter",
+   "from": 99,
+   "to": 171,
+   "space": "street",
+   "summary": "A kid on a scooter, eyes on his phone, heads for a lamppost; one tap on the handlebar and he curves round it at full speed.",
+   "moments": {
+    "T_TAP": {"t": 1.0, "what": "the umbrella tip taps the handlebar"},
+    "SW": {"t": [1.0, 1.4], "what": "the swerve round the lamppost"},
+    "T_POCKET": {"t": 1.62, "what": "the phone goes into his pocket"}
+   }
+  },
+  {
+   "n": 3,
+   "name": "Postman",
+   "from": 171,
+   "to": 243,
+   "space": "street",
+   "summary": "A dog barks through the letterbox and the postman's letters fly; the tip juggles them into the slot, one, two, three.",
+   "moments": {
+    "T_SLIP": {"t": 0.4, "what": "the bark: the flap bangs open, the postman jolts, the letters slip out of his hand"},
+    "T_POPS": {"t": [0.6, 0.8, 1.0, 1.3, 1.52], "what": "each time the tip pops a letter back up"},
+    "T_SLOTS": {"t": [1.15, 1.72, 2.08], "what": "each letter tapped into the slot (the flap snaps shut ~0.28 s later)"}
+   }
+  },
+  {
+   "n": 4,
+   "name": "Pigeon",
+   "from": 243,
+   "to": 327,
+   "space": "street",
+   "summary": "A pigeon's dropping falls for his head; he taps it into a planter, and some of it stays on the tip.",
+   "moments": {
+    "T_REL": {"t": 0.78, "what": "the pigeon lets go"},
+    "T_HIT": {"t": 1.42, "what": "the dropping meets the umbrella tip"},
+    "T_LAND": {"t": 2.02, "what": "it lands in the planter"}
+   }
+  },
+  {
+   "n": 5,
+   "name": "Flowerpot",
+   "from": 327,
+   "to": 472,
+   "space": "street",
+   "summary": "The dirty tip saves a falling pot (leaving a smear on it); the pigeon poops on a man reading on a bench, and gets it flicked straight back.",
+   "moments": {
+    "T_LAND": {"t": 2.55, "what": "the pigeon lands on the sill"},
+    "T_REL": {"t": 3.15, "what": "it lets go over the reader"},
+    "T_HIT": {"t": 3.58, "what": "the dropping meets the tip"},
+    "T_SPLAT": {"t": 3.88, "what": "flicked back: it hits the pigeon"}
+   }
+  },
+  {
+   "n": 6,
+   "name": "Butcher",
+   "from": 472,
+   "to": 615,
+   "space": "street",
+   "summary": "He wipes the tip clean on his own trouser leg; a bulldog steals a chain of sausages; one chop, one snip, and the falling sausage ends up skewered on the tip.",
+   "moments": {
+    "T_LOOK": {"t": [0.38, 0.56], "what": "he sniffs the soiled tip"},
+    "T_WIPE": {"t": [0.68, 0.88], "what": "one swipe down his own shin: the tip is clean"},
+    "T_HOOK": {"t": 1.38, "what": "he lifts the chain off the dog"},
+    "T_TURN": {"t": 1.5, "what": "the dog turns and digs in"},
+    "T_GRAB": {"t": 2.0, "what": "the butcher grabs the far end: tug of war"},
+    "T_C1": {"t": 2.86, "what": "the chop"},
+    "T_C2": {"t": 3.22, "what": "the ninja snip"},
+    "T_SPEAR": {"t": 3.3, "what": "the falling sausage is skewered on the tip"},
+    "T_SIP": {"t": [4.5, 4.75, 5.05, 5.3], "what": "sip: up, at the mouth, leaves the mouth, down"}
+   }
+  },
+  {
+   "n": 7,
+   "name": "Cat",
+   "from": 615,
+   "to": 723,
+   "space": "park",
+   "summary": "The sausage on the tip coaxes a cat out of a tree and into a girl’s hands.",
+   "moments": {
+    "T_UP": {"t": [0.8, 1.15], "what": "the tip with the sausage rises to the cat"},
+    "T_STARTLE": {"t": [1.15, 1.42], "what": "the cat bristles (hiss)"},
+    "T_SNIFF": {"t": [1.42, 1.82], "what": "it sniffs"},
+    "T_LICK": {"t": [1.82, 2.25], "what": "it licks"},
+    "T_DOWN": {"t": [2.25, 2.72], "what": "the tip lowers, the cat following it with its eyes"},
+    "T_TURN": {"t": 2.3, "what": "the girl turns"},
+    "T_WIPE": {"t": [2.72, 2.95], "what": "he wipes scrap and grease onto the girl's palm"},
+    "T_JUMP": {"t": [2.98, 3.3], "what": "the cat jumps down to her hand (then purrs and licks her palm)"},
+    "T_SIP": {"t": [3.75, 4.0, 4.3, 4.5], "what": "sip: up, at the mouth, leaves the mouth, (half way down at the cut)"}
+   }
+  },
+  {
+   "n": 8,
+   "name": "Pond",
+   "from": 723,
+   "to": 831,
+   "space": "park",
+   "summary": "Snapping the umbrella open is the gust that fills a becalmed toy boat's sails.",
+   "moments": {
+    "T_OPEN": {"t": [1.05, 1.17], "what": "the umbrella snaps open"},
+    "T_SWISH": {"t": 1.08, "what": "the swish of the opening"},
+    "T_GUST": {"t": 1.42, "what": "the gust reaches the sails; the kids are surprised, then cheer from T_GUST + 0.25"},
+    "T_SIP": {"t": [2.45, 2.65, 2.9, 3.05], "what": "sip: up, at the mouth, leaves the mouth, down"},
+    "T_DIP": {"t": [9, 9.3], "what": "unused gag, parked after the end of the shot: dip the canopy in the pond"},
+    "T_LIFT": {"t": [9.4, 9.6], "what": "unused gag: lift it out"},
+    "T_POUR": {"t": [9.7, 9.9], "what": "unused gag: pour the water out"}
+   }
+  },
+  {
+   "n": 9,
+   "name": "Wet concrete",
+   "from": 831,
+   "to": 939,
+   "space": "site",
+   "summary": "He hooks the crook over a scaffold rail and glides over the fresh concrete, knees up, coffee level.",
+   "moments": {
+    "T_CLOSE": {"t": [1.16, 1.3], "what": "he closes the umbrella"},
+    "T_DOWN": {"t": [1.3, 1.44], "what": "brings it down"},
+    "T_TOSS": {"t": [1.46, 1.66], "what": "tosses it and catches it low"},
+    "T_RAISE": {"t": [1.68, 1.86], "what": "raises the crook to the rail (the hop)"},
+    "T_HOOK": {"t": 1.86, "what": "the crook hooks the rail: clang"},
+    "T_GO": {"t": 1.98, "what": "the glide starts"},
+    "T_LAND": {"t": 2.72, "what": "feet down on the far side"},
+    "T_PULL": {"t": [2.72, 2.8], "what": "unhooks"},
+    "T_FALL": {"t": [2.8, 2.95], "what": "the umbrella drops"},
+    "T_LOWER": {"t": [3.0, 3.2], "what": "lowered"},
+    "T_SLIDE": {"t": [3.22, 3.38], "what": "the shaft slides through his hand to the crook"}
+   }
+  },
+  {
+   "n": 10,
+   "name": "Ice cream",
+   "from": 939,
+   "to": 1060,
+   "space": "park",
+   "summary": "A dropped cone and two gold coins flicked into the tip jar.",
+   "moments": {
+    "T_FALL": {"t": [0.78, 1.0], "what": "both scoops topple onto the pavement"},
+    "T_F1": {"t": 1.62, "what": "he flicks the first coin"},
+    "C1": {"t": [1.66, 2.1], "what": "the first coin flies into the jar"},
+    "TR1": {"t": [2.35, 2.65], "what": "the vendor carries the first fresh scoop"},
+    "TR2": {"t": [2.65, 2.95], "what": "the second fresh scoop"},
+    "T_F2": {"t": 3.72, "what": "the second coin"},
+    "C2": {"t": [3.76, 4.15], "what": "the second coin flies into the jar"},
+    "T_MAKE": {"t": [4.2, 4.45], "what": "the vendor makes the girl's cone"},
+    "T_GRIP": {"t": 4.72, "what": "the girl takes it"},
+    "T_SIP": {"t": [4.3, 4.55, 4.85, 5.04], "what": "sip: up, at the mouth, leaves the mouth, (partly down at the cut)"}
+   }
+  },
+  {
+   "n": 11,
+   "name": "Painter",
+   "from": 1060,
+   "to": 1168,
+   "space": "embankment",
+   "summary": "He flicks a painter's lost glasses back onto his nose.",
+   "moments": {
+    "T_REACH": {"t": 1.2, "what": "the tip slides under the glasses"},
+    "T_FLICK": {"t": 1.5, "what": "flicks them up"},
+    "T_ON": {"t": 1.92, "what": "they land on the painter's nose; he startles"},
+    "S_SKY": {"t": [2.72, 3.05], "what": "he paints the sky"},
+    "S_RIV": {"t": [3.1, 3.32], "what": "the river"},
+    "S_BLD": {"t": [3.38, 3.7], "what": "the buildings"},
+    "S_TWR": {"t": [3.76, 4.0], "what": "the clock tower"},
+    "S_CLK": {"t": [4.05, 4.14], "what": "the clock face (the real clock strikes at its end)"},
+    "T_SIP": {"t": [3.2, 3.45, 3.75, 3.95], "what": "sip: up, at the mouth, leaves the mouth, down"}
+   }
+  },
+  {
+   "n": 12,
+   "name": "Van",
+   "from": 1168,
+   "to": 1263,
+   "space": "street",
+   "summary": "He taps a sliding box back into the van and slides its door shut.",
+   "moments": {
+    "T_CLIMB": {"t": [0.92, 1.08], "what": "the driver climbs into the cab on the far side"},
+    "T_ENG": {"t": 1.15, "what": "the engine catches (exhaust puff, the van shakes)"},
+    "T_TAP": {"t": 1.62, "what": "the tip taps the creeping box back"},
+    "T_HOOK": {"t": 1.98, "what": "the tip hooks the door handle"},
+    "T_SHUT": {"t": 2.24, "what": "the sliding door slams shut"},
+    "T_GO": {"t": 2.55, "what": "the van pulls away"},
+    "T_SIP": {"t": [2.95, 3.2, 3.5, 3.7], "what": "sip: up, at the mouth, leaves the mouth, down"}
+   }
+  },
+  {
+   "n": 13,
+   "name": "Handbag",
+   "from": 1263,
+   "to": 1359,
+   "space": "street",
+   "summary": "A stolen bag catches on the level shaft and slides back to its owner.",
+   "moments": {
+    "T_YANK": {"t": 0.9, "what": "the thief yanks the bag"},
+    "T_HOOK": {"t": 1.12, "what": "its handle catches on the shaft"},
+    "T_LOSE": {"t": 1.46, "what": "his grip fails; he stumbles on"},
+    "T_TILT": {"t": [2.08, 2.2], "what": "the man tips the umbrella"},
+    "T_SLIDE": {"t": [2.2, 2.58], "what": "the bag slides down the shaft"},
+    "T_CATCH": {"t": 2.6, "what": "into the lady's hands"},
+    "T_SIP": {"t": [3.15, 3.4, 3.7, 3.9], "what": "sip: up, at the mouth, leaves the mouth, down"}
+   }
+  },
+  {
+   "n": 14,
+   "name": "Taxi",
+   "from": 1359,
+   "to": 1456,
+   "space": "street",
+   "summary": "The open umbrella takes a taxi's puddle splash for two women, and the run-off rinses his trousers clean.",
+   "moments": {
+    "T_LOOK": {"t": 0.85, "what": "he clocks the taxi"},
+    "T_HOP": {"t": [1.2, 1.48], "what": "hops across"},
+    "T_OPEN": {"t": [1.46, 1.8], "what": "opens the umbrella face-on"},
+    "T_HIT": {"t": 1.9, "what": "the tyre hits the puddle"},
+    "T_HOLD": {"t": [2.12, 2.34], "what": "the sheet of water stands up"},
+    "T_BREAK": {"t": 2.36, "what": "it breaks on the canopy"},
+    "T_CLOSE": {"t": [2.85, 3.15], "what": "he closes the umbrella"},
+    "T_SIP": {"t": [0.15, 0.35, 0.65, 0.8], "what": "first sip: up, at the mouth, leaves the mouth, down"},
+    "T_SIP2": {"t": [3.3, 3.5, 3.8, 4.0], "what": "second sip (half way down at the cut)"},
+    "T_CLAPS": {"t": 2.58, "what": "the relieved bystander starts clapping (a clap every 0.262 s)"}
+   }
+  },
+  {
+   "n": 15,
+   "name": "Raindrop",
+   "from": 1456,
+   "to": 1504,
+   "space": "close",
+   "summary": "The first drop of rain lands in his coffee's sip hole.",
+   "moments": {
+    "T1": {"t": [0.1, 0.62], "what": "the drop falls, tracked, into the sip hole (the crown jumps at the end)"},
+    "T_BEADS": {"t": [0.92, 1.18, 1.42, 1.68], "what": "the next drops bead on the lid"}
+   }
+  },
+  {
+   "n": 16,
+   "name": "Face",
+   "from": 1504,
+   "to": 1563,
+   "space": "close",
+   "summary": "A drop on the cheek, a look up, a smile.",
+   "moments": {
+    "T_HIT": {"t": 0.45, "what": "the drop lands on his cheekbone"}
+   }
+  },
+  {
+   "n": 17,
+   "name": "Stance",
+   "from": 1563,
+   "to": 1624,
+   "space": "street",
+   "summary": "The rain comes on; his fencer's lunge pops a woman's stuck umbrella open.",
+   "moments": {
+    "T_POP": {"t": 0.92, "what": "the tip pops the catch: the red umbrella springs open"}
+   }
+  },
+  {
+   "n": 18,
+   "name": "Exit",
+   "from": 1624,
+   "to": 1709,
+   "space": "street",
+   "summary": "He finally opens his own umbrella and walks off.",
+   "moments": {
+    "T_OPEN": {"t": [0.12, 0.34, 0.52, 0.62], "what": "a slow, proper open: starts, slides, springs taut (overshoot), settles"},
+    "T_SIP": {"t": [0.8, 1.05, 1.4, 1.6], "what": "sip: up, at the mouth, leaves the mouth, down"}
+   }
+  },
+  {
+   "n": 19,
+   "name": "Last word",
+   "from": 1709,
+   "to": 1839,
+   "space": "street",
+   "summary": "The pigeon picks the wrong target: the cat.",
+   "moments": {
+    "T_IN": {"t": [0.55, 1.05], "what": "the pigeon flies in"},
+    "T_POOP": {"t": [1.0, 1.28], "what": "the dropping falls onto the cat"},
+    "T_LAND": {"t": 1.55, "what": "the pigeon lands on a branch to gloat"},
+    "T_CLIMB": {"t": [1.95, 2.35], "what": "the cat climbs"},
+    "T_CROUCH": {"t": [2.35, 2.85], "what": "crouches, waits"},
+    "T_POUNCE": {"t": [2.85, 3.0], "what": "pounces: the pigeon just gets away"}
+   }
+  }
+ ]
+}

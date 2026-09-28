@@ -34,7 +34,7 @@ def main():
     args = ap.parse_args()
 
     build(quiet=True)
-    cuts = json.loads((ROOT / 'audio' / 'cuts.json').read_text())['cuts']
+    from timeline import CUTS as cuts
     off, length = 0.0, cuts[-1] / 24
     if args.shot:
         off, length = cuts[args.shot - 1] / 24, (cuts[args.shot] - cuts[args.shot - 1]) / 24

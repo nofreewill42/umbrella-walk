@@ -25,7 +25,7 @@ const plRes = (pts, n) => { const o = []; for (let k = 0; k < n; k++) o.push(plA
 const plSub = (pts, f0, f1, n) => { const o = []; for (let k = 0; k < n; k++) o.push(plAt(pts, lerp(f0, f1, k / (n - 1)))); return o; };
 shot('Butcher', ...CUT(6), (ctx, t) => {
   skyFill(ctx, '#c9ced1', '#d7d9da');
-  const T_LOOK = [.38, .56], T_WIPE = [.68, .88], T_HOOK = 1.38, T_TURN = 1.5, T_GRAB = 2.0, T_C1 = 2.86, T_C2 = 3.22, T_SPEAR = 3.3;
+  const { T_LOOK, T_WIPE, T_HOOK, T_TURN, T_GRAB, T_C1, T_C2, T_SPEAR, T_SIP } = MOMENTS('Butcher');
   const NS = 8, NP = 12;
   // ---- camera: a gentle pan, then a push-in on the last three sausages for the cut ----
   const zoom = kf(t, [[2.3, 0], [2.68, 1, E.io], [3.68, 1], [4.08, 0, E.io]]);
@@ -112,7 +112,7 @@ shot('Butcher', ...CUT(6), (ctx, t) => {
   const armT = heroArmIK(base.Sh, add(base.Sh, [.24, -.2]), 1);
   arms.L = { sh: lerp(arms.L.sh, armT.sh, torch), el: lerp(arms.L.el, armT.el, torch), wr: 0 };
   ang = lerp(ang, 1.3, torch);
-  const sipT = kf(t, [[4.5, 0], [4.75, 1, E.io], [5.05, 1], [5.3, 0, E.io]]);
+  const sipT = kf(t, [[T_SIP[0], 0], [T_SIP[1], 1, E.io], [T_SIP[2], 1], [T_SIP[3], 0, E.io]]);
   arms.R = blendArm({ sh: -.2, el: .8 }, CUP_LOW, torch);   // umbrella up like a torch, so the coffee stays low
   const disgust = t > T_LOOK[0] + .05 && t < T_WIPE[0];
   heroSide(ctx, { x: heroX, y: 0, legs, arms, lean: leanB, umb: { ang }, sipT, coatShort: knee * .55, coatFlare: knee * .5, nod: disgust ? .2 : 0, brow: disgust ? -.8 : t > 2.6 && t < 3.4 ? -.3 : 0, mouth: disgust ? -.6 : 0, smirk: t > T_WIPE[1] && !(t > 2.6 && t < 3.4) ? .7 : 0 });
@@ -182,10 +182,10 @@ shot('Cat', ...CUT(7), (ctx, t) => {
   HS.sausage = 1; HS.leg = 1;
   const CX = 1.12, CY = branchY(CX) + .01;
   const mouthC = [CX - .2 - .075, CY + .135 - .035];
-  const T_UP = [.8, 1.15], T_STARTLE = [1.15, 1.42], T_SNIFF = [1.42, 1.82], T_LICK = [1.82, 2.25], T_DOWN = [2.25, 2.72], T_WIPE = [2.72, 2.95], T_JUMP = [2.98, 3.3];
+  const { T_UP, T_STARTLE, T_SNIFF, T_LICK, T_DOWN, T_WIPE, T_JUMP, T_SIP } = MOMENTS('Cat');
   // ---- girl ----
   // she pleads facing the tree; when the tip comes down to her she turns round and offers her palm
-  const T_TURN = 2.3, gf = t < T_TURN ? 1 : -1;
+  const { T_TURN } = MOMENTS('Cat'), gf = t < T_TURN ? 1 : -1;
   const catLand = [.5, 0];
   const kneel = E.io(seg(t, 3.34, 3.62));
   const standG = standLegs(.04, .03), kLegs = [{ th: .5, kn: 2.2, fa: -1.2 }, { th: .35, kn: 2.1, fa: -1.1 }];
@@ -232,7 +232,7 @@ shot('Cat', ...CUT(7), (ctx, t) => {
   const m = heroSide(ctx, { x: hx, y: 0, measure: 1, legs: legsByDist(d, spd), arms });
   const ang = lerp(baseAng, Math.atan2(tipT[1] - m.handL[1], tipT[0] - m.handL[0]), E.io(raise));
   if (t > T_WIPE[0] + .1) HS.sausage = 0;
-  const sipT = kf(t, [[3.75, 0], [4.0, 1, E.io], [4.3, 1], [4.5, .5]]);
+  const sipT = kf(t, [[T_SIP[0], 0], [T_SIP[1], 1, E.io], [T_SIP[2], 1], [T_SIP[3], .5]]);
   heroSide(ctx, { x: hx, y: 0, legs: legsByDist(d, spd), arms, umb: { ang }, sipT, smirk: t > 3.3 ? .6 : 0 });
   const tipNow = umbTip(m.handL, ang);
   // the smell of sausage: a warm wisp from the scrap on the tip, later from her hand
@@ -282,7 +282,7 @@ shot('Cat', ...CUT(7), (ctx, t) => {
 shot('Pond', ...CUT(8), (ctx, t, T) => {
   HS.leg = 1; // the trouser smear from the butcher's shop, until the taxi water washes it
   const CX = .6, CY = .95, SC = 370, rimY = .04, wy = -.08;
-  const T_OPEN = [1.05, 1.17], T_SWISH = 1.08, T_GUST = 1.42, T_DIP = [9, 9.3], T_LIFT = [9.4, 9.6], T_POUR = [9.7, 9.9];
+  const { T_OPEN, T_SWISH, T_GUST, T_DIP, T_LIFT, T_POUR, T_SIP } = MOMENTS('Pond');
   // the umbrella is pointed at the boat and snapped open: the snap itself is the gust
   const open = kf(t, [[T_OPEN[0], 0], [T_OPEN[1] - .02, 1.08, E.o], [T_OPEN[1] + .06, 1]]);
   HS.water = t < T_DIP[1] ? 0 : t < T_POUR[0] ? E.o(seg(t, T_DIP[1], T_DIP[1] + .12)) : 1 - seg(t, T_POUR[0] + .05, T_POUR[1]);
@@ -329,7 +329,7 @@ shot('Pond', ...CUT(8), (ctx, t, T) => {
     if (t > T_POUR[0] + .1) { const u = E.o(seg(t, T_POUR[0] + .1, T_POUR[1])); c.fillStyle = `rgba(110,100,80,${.4 * u})`; ell(c, q.x + .05, .14, .26 * u, .035); c.fill(); }
     // hero
     const smirk = t > 1.9 ? .6 : 0;
-    heroSide(c, { x: q.x, y: q.y, legs: q.legs, arms: q.arms, umb: { ang: q.ang, open: Math.min(1, open) }, sipT: kf(t, [[2.45, 0], [2.65, 1, E.io], [2.9, 1], [3.05, 0, E.io]]), lean: q.lean, nod: q.nod, brow: q.lookLeg ? -.7 : 0, mouth: q.lookLeg ? -.5 : 0, smirk });
+    heroSide(c, { x: q.x, y: q.y, legs: q.legs, arms: q.arms, umb: { ang: q.ang, open: Math.min(1, open) }, sipT: kf(t, [[T_SIP[0], 0], [T_SIP[1], 1, E.io], [T_SIP[2], 1], [T_SIP[3], 0, E.io]]), lean: q.lean, nod: q.nod, brow: q.lookLeg ? -.7 : 0, mouth: q.lookLeg ? -.5 : 0, smirk });
     // kids kneeling on the rim, facing us
     const surprise = t > T_GUST && t <= T_GUST + .25, joy = t > T_GUST + .25;
     KIDS.forEach(([sp, kx, tl], i) => {
@@ -434,7 +434,7 @@ shot('Wet concrete', ...CUT(9), (ctx, t) => {
   wetSign(ctx, -.12, .27, 1.05);
   [.98, 1.42].forEach(x => { rrect(ctx, x - .2, .24, .4, .045, .01); fs(ctx, '#b08a5a'); });
   // timings: stop hand, close, toss to a grip near the tip, hook the rail, glide over, feet down, unhook, let it slide back to the crook
-  const T_CLOSE = [1.16, 1.3], T_DOWN = [1.3, 1.44], T_TOSS = [1.46, 1.66], T_RAISE = [1.68, 1.86], T_HOOK = 1.86, T_GO = 1.98, T_LAND = 2.72, T_PULL = [2.72, 2.8], T_FALL = [2.8, 2.95], T_LOWER = [3.0, 3.2], T_SLIDE = [3.22, 3.38];
+  const { T_CLOSE, T_DOWN, T_TOSS, T_RAISE, T_HOOK, T_GO, T_LAND, T_PULL, T_FALL, T_LOWER, T_SLIDE } = MOMENTS('Wet concrete');
   // ---- the worker, kneeling on his boards; stop hand, ducks as the man glides past, then a thumbs-up ----
   const duck = kf(t, [[1.98, 0], [2.1, 1, E.o], [2.4, 1], [2.6, 0, E.io]]);
   const look = kf(t, [[1.25, 0], [1.38, 1], [3.35, 1], [3.55, 0, E.io]]);
@@ -534,7 +534,7 @@ shot('Ice cream', ...CUT(10), (ctx, t) => {
   pavement(ctx, -4, 4, -.45, .2, '#c3bdb3', { rows: 1, slab: 1.1 });
   
   const CS = 1.3;                                   // cone scale
-  const T_FALL = [.78, 1.0], T_F1 = 1.62, C1 = [1.66, 2.1], TR1 = [2.35, 2.65], TR2 = [2.65, 2.95], T_F2 = 3.72, C2 = [3.76, 4.15], T_MAKE = [4.2, 4.45], T_GRIP = 4.72;
+  const { T_FALL, T_F1, C1, TR1, TR2, T_F2, C2, T_MAKE, T_GRIP, T_SIP } = MOMENTS('Ice cream');
   const cartX = 1.4, cartY = .1, counterY = cartY + .96;
   const jar = [1.83, counterY];
   const coins = 2 + (t > C1[1] ? 1 : 0) + (t > C2[1] ? 1 : 0);
@@ -599,7 +599,7 @@ shot('Ice cream', ...CUT(10), (ctx, t) => {
     const flick = kf(tt, [[T_F1 - .12, 0], [T_F1 - .04, -.4, E.io], [T_F1 + .04, 1, E.o], [T_F1 + .25, 0, E.io], [T_F2 - .12, 0], [T_F2 - .04, -.4, E.io], [T_F2 + .04, 1, E.o], [T_F2 + .25, 0, E.io]]);
     const arms = armsByDist(d, spd); arms.L = { sh: arms.L.sh + flick * .22, el: arms.L.el + flick * .55, wr: 0 };   // a flick from the hip, well below the coffee
     arms.R = blendArm(arms.R, CUP_HIGH, kf(tt, [[1.2, 0], [1.4, 1, E.io]]));
-    const sipT = kf(tt, [[4.3, 0], [4.55, 1, E.io], [4.85, 1], [5.04, .4]]);
+    const sipT = kf(tt, [[T_SIP[0], 0], [T_SIP[1], 1, E.io], [T_SIP[2], 1], [T_SIP[3], .4]]);
     return { x: hx, y: hy, legs: legsByDist(d, spd), arms, umb: { swing: Math.sin(TAU * d / (2 * STRIDE())) * .1 * spd + flick * .35 }, sipT, smirk: (t > 2.95 && t < 3.3) || t > 4.8 ? .6 : 0 };
   };
   // ---- cat (front-most lane): smells the ice cream on the pavement and runs in for it ----

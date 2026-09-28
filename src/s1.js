@@ -1,7 +1,7 @@
 // ===== shots 1-6 (v5: beat-aligned, one readable beat at a time) =====
 
 // ---------- 1. Top hat ----------
-const HAT = { off: .55, seat: 1.75, spin: 1.92, flick: 2.9, head: 3.32, tip: [-.5, 2.38] };
+const HAT = (m => ({ off: m.T_OFF, seat: m.T_SEAT, spin: m.T_SPIN, flick: m.T_FLICK, head: m.T_HEAD, tip: [-.5, 2.38] }))(MOMENTS('Top hat'));
 const hatSpin = t => { const a = seg(t, HAT.spin, HAT.spin + .25), b = seg(t, HAT.flick - .1, HAT.flick); return t < HAT.spin ? 0 : 26 * ((t - HAT.spin) - .125 * (a < 1 ? a * a : 2 * a - 1)); };
 function hatFlight(t, headTop) {
   const u = seg(t, HAT.off, HAT.seat), uu = .5 * u + .5 * u * u;
@@ -71,7 +71,8 @@ shot('Top hat', ...CUT(1), (ctx, t) => {
   armL = { sh: lerp(armL.sh, ikS.sh, w2), el: lerp(armL.el, ikS.el, w2) };
   ua = lerp(ua, angS, w2);
   const tracking = t > .62 && t < HAT.seat;
-  const sipT = kf(t, [[3.55, 0], [3.8, 1, E.io], [4.125, 1]]);
+  const { T_SIP } = MOMENTS('Top hat');
+  const sipT = kf(t, [[T_SIP[0], 0], [T_SIP[1], 1, E.io], [T_SIP[2], 1]]);
   const hp = Object.assign({}, base, { farms: { R: base.farms.R, L: armL }, umb: { ang: ua }, blink: kf(t, [[3.02, 0], [3.07, 1], [3.15, 0]]), sipT,
     lookX: tracking ? .5 : t > HAT.seat && t < HAT.flick ? .6 : t >= HAT.flick && t < HAT.head + .2 ? .9 : 0, lookY: tracking || (t > HAT.seat && t < HAT.flick) ? .9 : 0, brow: t > .62 && t < .9 ? .8 : 0, smirk: t > HAT.seat && t < HAT.head + .3 ? .6 : 0 });
   const m = heroFront(ctx, Object.assign({ measure: 1 }, hp));
@@ -113,7 +114,7 @@ shot('Scooter', ...CUT(2), (ctx, t) => {
   kerb(ctx, -6, 8, -.1, .16);
   road(ctx, -6, 8, -1.6, -.26, '#56595e');
   const postX = .45, postZ = .5;
-  const T_TAP = 1.0, SW = [1.0, 1.4];
+  const { T_TAP, SW, T_POCKET } = MOMENTS('Scooter');
   const KX = tt => 2.65 - 1.7 * tt;                       // constant speed, start to finish
   const kx = KX(t), kz = lerp(.5, 0, E.io(seg(t, ...SW)));
   const turn = Math.sin(Math.PI * seg(t, SW[0], SW[1] + .05));
@@ -147,7 +148,7 @@ shot('Scooter', ...CUT(2), (ctx, t) => {
     const bar = { sh: .95, el: .15 }, phoneA = { sh: .35, el: 1.75 };
     const grabBar = E.o(seg(t, T_TAP, T_TAP + .12));
     const pocket = kf(t, [[1.45, 0], [1.58, 1, E.io], [1.66, 1], [1.78, 0, E.io]]);
-    const phoneOn = t < 1.62;
+    const phoneOn = t < T_POCKET;
     const wave = kf(t, [[1.8, 0], [1.9, 1, E.o], [2.3, 1], [2.42, 0]]);
     let near = { sh: lerp(phoneA.sh, bar.sh, grabBar), el: lerp(phoneA.el, bar.el, grabBar) };
     near = { sh: lerp(near.sh, -2.5, wave), el: lerp(near.el, -.3, wave) + Math.sin(t * 22) * .35 * wave };
@@ -178,12 +179,12 @@ shot('Postman', ...CUT(3), (ctx, t) => {
   pavement(ctx, -3, 4, -.35, .0, '#bcb6ac', { rows: 1 });
   const slot = [1.2, .14 + 2.1 * .44 + .028];
   // contact plan: each letter is popped back up every .6 s, then tapped into the slot
-  const T_SLIP = .4, P0 = [1.38, 1.0];
+  const { T_SLIP, T_POPS, T_SLOTS } = MOMENTS('Postman'), P0 = [1.38, 1.0];
   // one-two-three: each letter is popped up once or twice to stagger them, then tapped into the slot
   const plan = [
-    { c: [[.6, [.95, .78]], [1.15, [1.02, slot[1]]]], flip: 1 },
-    { c: [[.8, [.82, .76]], [1.3, [.88, .8]], [1.72, [1.02, slot[1]]]], flip: -1 },
-    { c: [[1.0, [1.1, .8]], [1.52, [1.05, .82]], [2.08, [1.02, slot[1]]]], flip: 1 },
+    { c: [[T_POPS[0], [.95, .78]], [T_SLOTS[0], [1.02, slot[1]]]], flip: 1 },
+    { c: [[T_POPS[1], [.82, .76]], [T_POPS[3], [.88, .8]], [T_SLOTS[1], [1.02, slot[1]]]], flip: -1 },
+    { c: [[T_POPS[2], [1.1, .8]], [T_POPS[4], [1.05, .82]], [T_SLOTS[2], [1.02, slot[1]]]], flip: 1 },
   ];
   const arcH = (k, n) => k === n - 2 ? .32 : .52; // paper floats: each pop goes about half a metre up
   const letterPos = (L, i, tt) => {
@@ -282,7 +283,7 @@ shot('Pigeon', ...CUT(4), (ctx, t) => {
   rect(ctx, -3.2, 2.65, 5.6, .45); fsb(ctx, '#2f4a3f');
   txt(ctx, 'SECOND-HAND BOOKS', -.4, 2.87, .2, '#e8dcb8', '700 {S}px Georgia, "DejaVu Serif", serif');
   pavement(ctx, -4, 5, -.4, .1, '#beb8ae', { rows: 1, slab: 1.0 });
-  const T_REL = .78, T_HIT = 1.42, T_LAND = 2.02;
+  const { T_REL, T_HIT, T_LAND } = MOMENTS('Pigeon');
   const PL = [1.9, .1], soil = [1.84, PL[1] + .57];
   planterTree(ctx, PL[0], PL[1], { onSoil: (c, q) => { if (t > T_LAND) { const u = E.o(seg(t, T_LAND, T_LAND + .1)); ell(c, q[0] - .06, q[1] + .015, .14 * u + .01, .04 * u + .004); fs(c, '#efece2', OLW * .7); ell(c, q[0] - .06, q[1] + .018, .055 * u, .016 * u); c.fillStyle = 'rgba(100,104,72,.8)'; c.fill(); } } });
   if (t > T_LAND && t < T_LAND + .35) { const u = seg(t, T_LAND, T_LAND + .35), r = rng(3); ctx.fillStyle = `rgba(80,58,40,${1 - u})`; for (let k = 0; k < 12; k++) { const a = Math.PI * (.1 + .8 * r()); circ(ctx, soil[0] - .06 + Math.cos(a) * u * .26, soil[1] + Math.sin(a) * u * .24 - u * u * .25, .018); ctx.fill(); } }
@@ -365,7 +366,7 @@ shot('Flowerpot', ...CUT(5), (ctx, t) => {
   if (t > .62 && t < 1.62) { const c = Math.cos(tipA), s2 = Math.sin(tipA); potPos = [corner[0] + (-.05) * c + drop * .3, corner[1] + (-.05) * s2 - drop]; potRot = tipA; }
   else if (t >= 1.62) { potRot = tipA; potPos = [lerp(.8, .5, back), 2.45]; }
   // ---- the pigeon: flies in, lands on the sill beside the pot, looks at the pot... then at the man ----
-  const T_LAND = 2.55, T_REL = 3.15, T_HIT = 3.58, T_SPLAT = 3.88;
+  const { T_LAND, T_REL, T_HIT, T_SPLAT } = MOMENTS('Flowerpot');
   const PERCH = [.78, 2.45];
   const pigFly = tt => { const u = seg(tt, 1.95, T_LAND); return [lerp(3.4, PERCH[0], E.o(u)), lerp(3.0, PERCH[1], E.o(u)) + Math.sin(Math.PI * u) * .1]; };
   // ---- hero ----

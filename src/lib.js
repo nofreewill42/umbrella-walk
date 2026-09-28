@@ -94,10 +94,10 @@ function streetBack(ctx, T, wet) {
   for (let i = -3; i <= 3; i++) { rect(ctx, i * 2.2 - .9, .45, 1.9, 4.6); ctx.fillStyle = i % 2 ? '#c7ccd0' : '#c2c8cc'; ctx.fill(); for (let r = 0; r < 3; r++) for (let c = 0; c < 2; c++) { rect(ctx, i * 2.2 - .7 + c * .85, 1.4 + r * 1.2, .5, .8); ctx.fillStyle = '#aab3ba'; ctx.fill(); } }
   fogBand(ctx, -8, 8, .45, 5, '#dde0e2', .55, .25);
 }
-function bystanders(ctx, t, mode) {
+function bystanders(ctx, t, mode, clapAt = 1.25) {
   // mode 'splash' (S14) or 'rain' (S17)
   const rain = mode === 'rain';
-  const clap = !rain && t > 1.25 ? Math.abs(Math.sin((t - 1.25) * 12)) : 0;
+  const clap = !rain && t > clapAt ? Math.abs(Math.sin((t - clapAt) * 12)) : 0;   // hands meet every pi/12 = 0.262 s
   // the two women on the right see the wave coming at them, flinch, and stay dry
   const fear = t > .45 && t < .86, flinch = t >= .86 && t < 1.22, relief = t >= 1.22;
   const exR = rain ? null : fear ? { eyes: 'wide', mouth: 'o', brow: 1.4 } : flinch ? { eyes: 'closed', mouth: 'frown', brow: 1 } : relief ? { eyes: 'happy', mouth: 'laugh' } : { eyes: 'open', mouth: 'flat', lookX: -1 };

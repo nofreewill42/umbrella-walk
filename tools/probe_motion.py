@@ -127,7 +127,7 @@ def contacts(rec, cuts):
 
 if __name__ == '__main__':
     subprocess.run([sys.executable, str(ROOT / 'tools' / 'build.py')], check=True)
-    cuts = json.loads((ROOT / 'audio' / 'cuts.json').read_text())['cuts']
+    from timeline import CUTS as cuts
     rec = probe(range(cuts[-1]))
     ev = contacts(rec, cuts)
     (ROOT / 'audio' / 'steps.json').write_text(json.dumps({'fps': FPS, 'steps': ev}, indent=0))

@@ -30,8 +30,7 @@ shot('Painter', ...CUT(11), (ctx, t) => {
   rect(ctx, -4, .98, 9, .08); fsb(ctx, '#ddd6c8');
   pavement(ctx, -4, 5, -.45, .12, '#c0bab0', { rows: 1, slab: 1.2 });
   const G0 = [-.8, .045];
-  const T_REACH = 1.2, T_FLICK = 1.5, T_ON = 1.92;
-  const S_SKY = [2.72, 3.05], S_RIV = [3.1, 3.32], S_BLD = [3.38, 3.7], S_TWR = [3.76, 4.0], S_CLK = [4.05, 4.14];
+  const { T_REACH, T_FLICK, T_ON, S_SKY, S_RIV, S_BLD, S_TWR, S_CLK, T_SIP } = MOMENTS('Painter');
   // --- painter pose (needed early for the glasses' landing spot)
   const startle = kf(t, [[T_ON, 0], [T_ON + .07, 1, E.o], [2.15, .7], [2.3, 0]]);
   const squint = t < T_ON ? 1 : 0;
@@ -55,7 +54,7 @@ shot('Painter', ...CUT(11), (ctx, t) => {
   const low = kf(t, [[.9, 0], [1.05, 1, E.io], [2.0, 1], [2.3, 0, E.io]]); arms.R = blendArm(arms.R, CUP_HIGH, low);   // coffee held up in front while the umbrella hand works low
   const m = heroSide(ctx, { x: hx, y: hz, measure: 1, legs: legsH, lean: hLean, arms });
   const ang = lerp(-Math.PI / 2 + Math.sin(TAU * hd / (2 * STRIDE())) * .1, Math.atan2(tipT[1] - m.handL[1], tipT[0] - m.handL[0]), E.io(bow));
-  const sipT = kf(t, [[3.2, 0], [3.45, 1, E.io], [3.75, 1], [3.95, 0, E.io]]);
+  const sipT = kf(t, [[T_SIP[0], 0], [T_SIP[1], 1, E.io], [T_SIP[2], 1], [T_SIP[3], 0, E.io]]);
   const lookDown = t > .95 && t < 1.6;
   heroSide(ctx, { x: hx, y: hz, legs: legsH, lean: hLean, arms, umb: { ang }, sipT, nod: lookDown ? .35 : t > 4.2 && t < 4.4 ? .2 : 0, smirk: t > 2.1 ? .6 : 0 });
   // the glasses lying on the pavement behind the stool (a glint now and then), until flicked
@@ -130,7 +129,7 @@ shot('Van', ...CUT(12), (ctx, t) => {
   rect(ctx, -3.2, .3, 1.1, 2.0); ctx.fillStyle = '#9aa3a8'; ctx.fill(); rect(ctx, -3.1, .3, .9, 1.9); ctx.fillStyle = '#6f7a82'; ctx.fill();
   fogBand(ctx, -6, 6, .3, 4, '#e2e3e2', .4, .2);
   road(ctx, -6, 6, .1, .45, '#8a8d90', false);
-  const T_CLIMB = [.92, 1.08], T_ENG = 1.15, T_TAP = 1.62, T_HOOK = 1.98, T_SHUT = 2.24, T_GO = 2.55;
+  const { T_CLIMB, T_ENG, T_TAP, T_HOOK, T_SHUT, T_GO, T_SIP } = MOMENTS('Van');
   const drive = t > T_GO ? -2.9 * Math.pow(t - T_GO, 2) : 0;
   const vanX = -.1 + drive;
   const engine = t > T_ENG;
@@ -185,7 +184,7 @@ shot('Van', ...CUT(12), (ctx, t) => {
   const m = heroSide(ctx, { x: hx, y: hy, measure: 1, legs: legsByDist(hd, spd), arms });
   const ang = lerp(-Math.PI / 2 + Math.sin(TAU * hd / (2 * STRIDE())) * .1 * spd, Math.atan2(tipT[1] - m.handL[1], tipT[0] - m.handL[0]), E.io(k));
   const pullLean = t > T_HOOK && t < T_REL + .25 ? -.1 * Math.sin(Math.PI * seg(t, T_HOOK, T_REL + .25)) : 0;
-  const sipT = kf(t, [[2.95, 0], [3.2, 1, E.io], [3.5, 1], [3.7, 0, E.io]]);
+  const sipT = kf(t, [[T_SIP[0], 0], [T_SIP[1], 1, E.io], [T_SIP[2], 1], [T_SIP[3], 0, E.io]]);
   heroSide(ctx, { x: hx, y: hy, legs: legsByDist(hd, spd), arms, umb: { ang }, lean: -.03 + pullLean, sipT, smirk: t > 2.6 ? .6 : 0, nod: t > .6 && t < 1.0 ? -.1 : 0 });
   // tap and slam accents
   const burst = (p, t0, r0) => { if (t > t0 && t < t0 + .16) { const u = seg(t, t0, t0 + .16); ctx.strokeStyle = `rgba(40,40,40,${1 - u})`; ctx.lineWidth = px(2.6); ctx.lineCap = 'round'; for (let q = 0; q < 6; q++) { const a = q * TAU / 6 + .4; ctx.beginPath(); ctx.moveTo(p[0] + Math.cos(a) * r0, p[1] + Math.sin(a) * r0); ctx.lineTo(p[0] + Math.cos(a) * (r0 + .07 + u * .05), p[1] + Math.sin(a) * (r0 + .07 + u * .05)); ctx.stroke(); } } };
@@ -203,7 +202,7 @@ shot('Handbag', ...CUT(13), (ctx, t) => {
   railings(ctx, -3, 4, .2, .95, { c: '#23262b' });
   pavement(ctx, -3, 4, -.45, .2, '#c1bbb1', { rows: 1 });
   
-  const T_YANK = .9, T_HOOK = 1.12, T_LOSE = 1.46, T_TILT = [2.08, 2.2], T_SLIDE = [2.2, 2.58], T_CATCH = 2.6;
+  const { T_YANK, T_HOOK, T_LOSE, T_TILT, T_SLIDE, T_CATCH, T_SIP } = MOMENTS('Handbag');
   // ---- lady (upstage, right): robbed, jolted, then hurries over for her bag ----
   const lx = kf(t, [[T_YANK, 1.3], [T_YANK + .12, 1.18, E.o], [1.45, 1.2], [2.15, .55, E.io]]);
   const lWalk = t > 1.45 && t < 2.12;
@@ -220,7 +219,7 @@ shot('Handbag', ...CUT(13), (ctx, t) => {
   const ik = heroArmIK(base.Sh, handG, 1);
   const arms = armsByDist(hd, spd);
   arms.L = { sh: lerp(arms.L.sh, ik.sh, guard), el: lerp(arms.L.el, ik.el, guard), wr: 0 };
-  const sipT = kf(t, [[3.15, 0], [3.4, 1, E.io], [3.7, 1], [3.9, 0, E.io]]);
+  const sipT = kf(t, [[T_SIP[0], 0], [T_SIP[1], 1, E.io], [T_SIP[2], 1], [T_SIP[3], 0, E.io]]);
   const m = heroSide(ctx, { x: hx, y: .05, measure: 1, legs: legsByDist(hd, spd), arms });
   const tilt = kf(t, [[T_TILT[0], 0], [T_TILT[1], 1, E.io], [T_CATCH + .1, 1], [2.75, 0, E.io]]);
   const bump = t > T_HOOK && t < T_LOSE + .2 ? -.06 * Math.sin(Math.PI * seg(t, T_HOOK, T_LOSE + .2)) : 0;
@@ -283,6 +282,7 @@ shot('Handbag', ...CUT(13), (ctx, t) => {
 
 // ---------- 15. Taxi ----------
 shot('Taxi', ...CUT(14), (ctx, t, T) => {
+  const { T_LOOK, T_HOP, T_OPEN, T_HIT, T_HOLD, T_BREAK, T_CLOSE, T_SIP, T_SIP2, T_CLAPS } = MOMENTS('Taxi');
   skyFill(ctx, '#c1c9cf', '#d3d7da');
   camera(ctx, .8, 1.1, 325);
   streetBack(ctx, T);
@@ -290,15 +290,14 @@ shot('Taxi', ...CUT(14), (ctx, t, T) => {
   lamppost(ctx, -2.75, .15, .95);
   phoneBox(ctx, 3.3, .36, .85);
   railings(ctx, -3.6, -2.95, .45, .9, { c: '#2a2d32' });
-  bystanders(ctx, t - 1.33, 'splash');
+  bystanders(ctx, t - 1.33, 'splash', T_CLAPS - 1.33);
   const PX = 1.55;
-  const T_LOOK = .85, T_HOP = [1.2, 1.48], T_OPEN = [1.46, 1.8], T_HIT = 1.9, T_HOLD = [2.12, 2.34], T_BREAK = 2.36, T_CLOSE = [2.85, 3.15];
   
   const hop = seg(t, ...T_HOP), x0 = -.35, hx = lerp(x0, PX, E.io(hop)), hyHop = Math.sin(Math.PI * hop) * .2;
   const antic = kf(t, [[1.08, 0], [1.18, 1, E.io], [1.24, 0]]);
   const crouch = E.io(seg(t, T_OPEN[0], T_OPEN[0] + .2)) * (1 - E.io(seg(t, T_CLOSE[1], T_CLOSE[1] + .2)));
   const open = kf(t, [[T_OPEN[0], 0], [T_OPEN[0] + .1, .25, E.o], [T_OPEN[1] - .06, 1.07, E.io], [T_OPEN[1], 1], [T_CLOSE[0], 1], [T_CLOSE[0] + .08, 1.04], [T_CLOSE[1], 0, E.io]]);
-  const sipT = kf(t, [[.15, 0], [.35, 1, E.io], [.65, 1], [.8, 0, E.io], [3.3, 0], [3.5, 1, E.io], [3.8, 1], [4.0, .5]]);
+  const sipT = kf(t, [[T_SIP[0], 0], [T_SIP[1], 1, E.io], [T_SIP[2], 1], [T_SIP[3], 0, E.io], [T_SIP2[0], 0], [T_SIP2[1], 1, E.io], [T_SIP2[2], 1], [T_SIP2[3], .5]]);
   const wet = seg(t, T_BREAK - .1, T_BREAK + .1) * (1 - seg(t, 3.0, 4.0) * .5);
   const kneeA = crouch + antic * .5;
   // the smear from the butcher's shop is still on his trouser leg until this water washes it off
@@ -403,7 +402,7 @@ shot('Raindrop', ...CUT(15), (ctx, t, T) => {
   ctx.restore();
   const drop = (x, y, s, a = 1) => { ctx.save(); ctx.globalAlpha = a; ctx.beginPath(); ctx.moveTo(x, y - 40 * s); ctx.quadraticCurveTo(x + 24 * s, y + 4 * s, x, y + 16 * s); ctx.quadraticCurveTo(x - 24 * s, y + 4 * s, x, y - 40 * s); ctx.fillStyle = 'rgba(215,232,244,.97)'; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(70,95,120,.95)'; ctx.stroke(); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(x - 7 * s, y + 2 * s, 5 * s, 8 * s, -.3, 0, TAU); ctx.fill(); ctx.restore(); };
   // drop 1: tracked all the way down into the sip hole
-  const T1 = [.1, .62];
+  const { T1, T_BEADS } = MOMENTS('Raindrop');
   if (t > T1[0] && t < T1[1]) {
     const u = seg(t, ...T1), y = lerp(-120, hy - 8, E.i(u)), x = lerp(hx - 60, hx, u);
     ctx.strokeStyle = 'rgba(220,235,245,.45)'; ctx.lineWidth = 22; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x - 20 * u, y - 120 - 260 * u); ctx.lineTo(x, y - 70); ctx.stroke();
@@ -419,7 +418,7 @@ shot('Raindrop', ...CUT(15), (ctx, t, T) => {
   // the spout's coffee comes down on the lid as a brown spot
   if (t > T1[1] + .3) { const u = E.o(seg(t, T1[1] + .3, T1[1] + .42)); ctx.save(); ctx.translate(hx - 150, hy - 40); ctx.beginPath(); ctx.ellipse(0, 0, 34 * u + 4, 14 * u + 2, -.2, 0, TAU); ctx.fillStyle = 'rgba(120,80,50,.92)'; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = INK; ctx.stroke(); ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.beginPath(); ctx.ellipse(-8, -3, 8 * u, 3 * u, -.2, 0, TAU); ctx.fill(); ctx.restore(); }
   // then the drops bead on the solid lid (a small squash as each lands)
-  const beads = [[.92, cx - 170, cy - 30], [1.18, cx + 70, cy - 105], [1.42, cx - 360, cy + 20], [1.68, cx + 180, cy + 10]];
+  const beads = [[T_BEADS[0], cx - 170, cy - 30], [T_BEADS[1], cx + 70, cy - 105], [T_BEADS[2], cx - 360, cy + 20], [T_BEADS[3], cx + 180, cy + 10]];
   beads.forEach(([t0, bx, by]) => {
     if (t > t0 - .2 && t < t0) { const u = seg(t, t0 - .2, t0); drop(bx, lerp(-120, by, E.i(u)), 1.6); }
     if (t >= t0) { const sq = 1 + .3 * Math.exp(-(t - t0) * 12) * Math.sin((t - t0) * 40); ctx.beginPath(); ctx.ellipse(bx, by, 42 * sq, 22 / sq, 0, 0, TAU); ctx.fillStyle = 'rgba(205,225,240,.92)'; ctx.fill(); ctx.lineWidth = 3.5; ctx.strokeStyle = 'rgba(70,95,120,.8)'; ctx.stroke(); ctx.beginPath(); ctx.arc(bx - 13, by + 6, 8, 0, TAU); ctx.fillStyle = '#fff'; ctx.fill(); }
@@ -449,7 +448,7 @@ shot('Face', ...CUT(16), (ctx, t, T) => {
   P(ctx, [[-.009, -.212], [.009, -.212], [.02, -.44], [0, -.47], [-.02, -.44]]); fs(ctx, HERO.tie);
   ctx.restore();
   // acting: neutral, the drop lands on his cheekbone, a blink, he looks up, the corner of his mouth lifts and stays
-  const T_HIT = .45;
+  const { T_HIT } = MOMENTS('Face');
   const eyes = kf(t, [[0, .38], [.95, .38], [1.25, .6, E.io], [1.6, .6], [1.9, .34, E.io]]);
   const blink = kf(t, [[T_HIT + .02, 0], [T_HIT + .07, 1], [T_HIT + .16, 0], [2.0, 0], [2.05, .8], [2.12, 0]]);
   const lookY = kf(t, [[0, 0], [.95, 0], [1.3, .95, E.io]]);
@@ -527,7 +526,7 @@ shot('Stance', ...CUT(17), (ctx, t, T) => {
   ctx.fillStyle = 'rgba(210,220,230,.25)'; ctx.fillRect(-5, -.04, 10, .04);
   lamppost(ctx, -2.95, .2, 1.0);
   phoneBox(ctx, 3.35, .2, 1.05);
-  const T_POP = .92;
+  const { T_POP } = MOMENTS('Stance');
   let b2i = null;
   bystandersRain(ctx, t, seg(t, 0, 1.3), { popT: T_POP, onB2: w => { b2i = w; } });
   HS.leg = 0; HS.dirt = 0;
@@ -584,8 +583,9 @@ shot('Exit', ...CUT(18), (ctx, t, T) => {
   fogBand(ctx, -6, 6, -1, 5, '#b9c1c8', .15, .7);
   ctx.fillStyle = 'rgba(210,220,230,.18)'; for (let i = 0; i < 6; i++) { ell(ctx, (i - 2.5) * .9, -.25 + (i % 2) * .1, .4, .03); ctx.fill(); }
   // ---- hero: a deliberate open (in-betweens, overshoot), a sip, the turn, then away down the street ----
-  const open = kf(t, [[.12, 0], [.34, .28, E.io], [.52, 1.08, E.o], [.62, 1, E.io]]);
-  const sipT = kf(t, [[.8, 0], [1.05, 1, E.io], [1.4, 1], [1.6, 0, E.io]]);
+  const { T_OPEN, T_SIP } = MOMENTS('Exit');
+  const open = kf(t, [[T_OPEN[0], 0], [T_OPEN[1], .28, E.io], [T_OPEN[2], 1.08, E.o], [T_OPEN[3], 1, E.io]]);
+  const sipT = kf(t, [[T_SIP[0], 0], [T_SIP[1], 1, E.io], [T_SIP[2], 1], [T_SIP[3], 0, E.io]]);
   const smirk = kf(t, [[1.5, 0], [1.75, 1]]);
   const away = seg(t, 2.2, 3.54);
   const walkPh = (t - 2.2) * 1.0;
@@ -631,7 +631,7 @@ shot('Last word', ...CUT(19), (ctx, t, T) => {
   const tw = (u, v) => [TX + u * TS, TY + v * TS];
   streetTree(ctx, TX, TY, TS);
   const CS = .5, catBase = [-1.0, .83], branchEnd = tw(.88, 2.26), junction = tw(.14, 2.08);
-  const T_IN = [.55, 1.05], T_POOP = [1.0, 1.28], T_LAND = 1.55, T_CLIMB = [1.95, 2.35], T_CROUCH = [2.35, 2.85], T_POUNCE = [2.85, 3.0];
+  const { T_IN, T_POOP, T_LAND, T_CLIMB, T_CROUCH, T_POUNCE } = MOMENTS('Last word');
   // the pigeon (its own dropping still on its back) flies in, drops one on the cat, lands on the branch, gloats
   const pig = tt => tt < 1.12 ? mix([.3, 2.05], [-.95, 1.78], seg(tt, T_IN[0], 1.12)) : mix([-.95, 1.72], add(branchEnd, [0, .005]), E.o(seg(tt, 1.12, T_LAND)));
   if (t > T_IN[0] && t < T_POUNCE[1]) {

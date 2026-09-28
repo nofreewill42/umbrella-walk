@@ -20,7 +20,9 @@ from scipy.signal import butter, lfilter, fftconvolve
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SR = 44100
-DUR = json.loads((ROOT / 'audio' / 'cuts.json').read_text())['cuts'][-1] / 24
+import sys
+sys.path.insert(0, str(ROOT / 'tools'))
+from timeline import DUR, T, M  # noqa: E402  (shot timing and named moments, from timeline.json)
 BEATS = json.loads((ROOT / 'audio' / 'beats.json').read_text())['beats']
 BEAT = float(np.median(np.diff(BEATS)))
 N = int((DUR + 1.0) * SR)
@@ -266,30 +268,24 @@ def melody(phrase, b0, inst='trumpet', g=.26, bars=None, shift=0):
                 horn([m, m - 12], s, (e - s) * .85, g, 3200, .2, .02)
 
 
-def T(shot, sec):
-    """time of a moment inside a shot (1-based shot, seconds from the shot's start)"""
-    cuts = json.loads((ROOT / 'audio' / 'cuts.json').read_text())['cuts']
-    return cuts[shot - 1] / 24 + sec
-
-
 # ---------------- the score ----------------
 # A  shots 1-5 (beats 0-39): dry and breezy. Snaps and walking bass, then the muted trumpet motif.
-swell(T(1, .55), .5, .25)                                  # the gust takes the hat
+swell(M(1, 'T_OFF'), .5, .25)                                  # the gust takes the hat
 walk(['F6', 'D7'], 0, g=.5, comp=False, drums=False)
 for k in (1, 3, 5, 7):
     snap(bt(k))
-vibes(midi('C6'), T(1, 3.32), 1.0, .2)                     # hat back on his head
+vibes(midi('C6'), M(1, 'T_HEAD'), 1.0, .2)                     # hat back on his head
 walk(['Gm7', 'C7', 'F6', 'D7', 'Gm7', 'C7', 'F6', 'D7'], 8, snaps=True, dg=.8, stop=39)
 melody(M1, 8)
 melody(M2, 24, bars=4)
-woodblock(T(2, 1.0))                                       # the tap on the handlebar
-horn(['A2', 'C#3', 'E3'], T(3, .37), .16, .35, 900)        # WOOF
-for s, m in ((1.15, 'C6'), (1.72, 'E6'), (2.08, 'G6')):    # one, two, three into the slot
-    vibes(midi(m), T(3, s), .6, .22)
-celesta(midi('A5'), T(4, 1.42), 1.0, .22)                  # dropping meets the tip
-pizz(midi('F2'), T(4, 2.02), .35)                          # ...and plops into the planter
+woodblock(M(2, 'T_TAP'))                                       # the tap on the handlebar
+horn(['A2', 'C#3', 'E3'], M(3, 'T_SLIP') - .03, .16, .35, 900)        # WOOF
+for i, m in enumerate(('C6', 'E6', 'G6')):                  # one, two, three into the slot
+    vibes(midi(m), M(3, 'T_SLOTS', i), .6, .22)
+celesta(midi('A5'), M(4, 'T_HIT'), 1.0, .22)                  # dropping meets the tip
+pizz(midi('F2'), M(4, 'T_LAND'), .35)                          # ...and plops into the planter
 horn(['F3', 'A3', 'C4'], T(5, 1.0), .12, .25, 2200)        # pot caught
-horn(['Bb1', 'E2'], T(5, 3.88), .25, .35, 700)             # the splat on the pigeon
+horn(['Bb1', 'E2'], M(5, 'T_SPLAT'), .25, .35, 700)             # the splat on the pigeon
 for i in range(3):                                         # fill into the caper
     snare(bt(36.5 + i * .5), .12 + i * .05)
 
@@ -303,12 +299,12 @@ for bar in range(3):
         kick(bt(39 + bar * 4 + k), .22 if k % 2 == 0 else .1)
         if k in (1, 3):
             snare(bt(39 + bar * 4 + k), .12)
-roll(T(6, 2.3), T(6, 2.84), .03, .2)                       # the zoom in, the wind-up
-horn(['D3', 'F3', 'A3', 'C#4'], T(6, 2.86), .14, .42, 3000)   # chop
-horn(['D4', 'F4', 'A4'], T(6, 3.22), .07, .38, 3500)       # snip...
-horn(['D4', 'F4', 'A4', 'D5'], T(6, 3.3), .12, .4, 3500)   # ...skewered
-crash(T(6, 3.3), .14, 1.2)
-vibes(midi('F5'), T(6, 4.6), 1.2, .15)                     # a sip
+roll(T(6, 2.3), M(6, 'T_C1') - .02, .03, .2)                       # the zoom in, the wind-up
+horn(['D3', 'F3', 'A3', 'C#4'], M(6, 'T_C1'), .14, .42, 3000)   # chop
+horn(['D4', 'F4', 'A4'], M(6, 'T_C2'), .07, .38, 3500)       # snip...
+horn(['D4', 'F4', 'A4', 'D5'], M(6, 'T_SPEAR'), .12, .4, 3500)   # ...skewered
+crash(M(6, 'T_SPEAR'), .14, 1.2)
+vibes(midi('F5'), M(6, 'T_SIP') + .1, 1.2, .15)                     # a sip
 
 # B2 shot 7 (beats 51-60): the cat, soft vibes arpeggios and brushes.
 for i, (c, arp) in enumerate([('Fmaj7', ['F4', 'A4', 'C5', 'E5']), ('Bbmaj7', ['Bb3', 'D4', 'F4', 'A4'])]):
@@ -318,7 +314,7 @@ for i, (c, arp) in enumerate([('Fmaj7', ['F4', 'A4', 'C5', 'E5']), ('Bbmaj7', ['
     bass(midi(ROOT_OF[c]) + 7, bt(51 + i * 4 + 2), BEAT * 2, .4)
     for k in (1, 3):
         brush(bt(51 + i * 4 + k), .1)
-gliss(midi('C6'), midi('F4'), T(7, 2.98), .32, .16)        # the cat jumps down
+gliss(midi('C6'), midi('F4'), M(7, 'T_JUMP'), .32, .16)        # the cat jumps down
 
 # C  shots 8-13 (beats 60-113): the good deeds. Full swinging combo, vibes melody.
 walk(['Fmaj7', 'Dm7', 'Gm7', 'C7', 'Am7', 'D7', 'Gm7', 'C7', 'Fmaj7', 'Dm7', 'Gm7', 'C7', 'Fmaj7'], 60, dg=1.0)
@@ -326,23 +322,23 @@ melody(M1, 60, 'vibes', .24)
 melody(M2, 76, 'vibes', .24)
 melody(M1, 92, 'trumpet', .22)
 melody(M2, 108, 'vibes', .22, bars=1)
-swell(T(8, 1.12), .55, .3)                                 # the umbrella snaps open...
-horn(['F3', 'A3', 'C4', 'E4'], T(8, 1.12), .3, .38, 3000)
-gliss(midi('F5'), midi('F6'), T(8, 1.3), .25, .14)         # ...and the gust runs to the sails
-celesta(midi('C6'), T(9, 1.86), .8, .2)                    # the crook hooks the rail
-gliss(midi('F4'), midi('C6'), T(9, 1.98), .7, .12)         # the glide
-kick(T(9, 2.95), .35)                                      # feet down
-for s in (1.66, 3.72):                                     # two coins in the jar
-    celesta(midi('E6'), T(10, s + .44), .9, .22)
-celesta(midi('A5'), T(11, 1.5), .8, .2)                    # glasses flicked on
-woodblock(T(12, 1.62), .22)                                # box tapped back
-horn(['C3', 'E3', 'G3'], T(12, 2.24), .12, .35, 1800)      # door slammed
-kick(T(12, 2.24), .35)
-horn(['Bb3', 'D4', 'F4'], T(13, 1.12), .1, .3, 2500)       # the bag catches on the shaft
-gliss(midi('C5'), midi('F4'), T(13, 2.2), .38, .12)        # ...slides back to her
+swell(M(8, 'T_OPEN') + .07, .55, .3)                                 # the umbrella snaps open...
+horn(['F3', 'A3', 'C4', 'E4'], M(8, 'T_OPEN') + .07, .3, .38, 3000)   # the snap
+gliss(midi('F5'), midi('F6'), M(8, 'T_GUST') - .12, .25, .14)         # ...and the gust runs to the sails
+celesta(midi('C6'), M(9, 'T_HOOK'), .8, .2)                    # the crook hooks the rail
+gliss(midi('F4'), midi('C6'), M(9, 'T_GO'), .7, .12)         # the glide
+kick(M(9, 'T_FALL', 1), .35)                                      # feet down
+for c in ('C1', 'C2'):                                     # two coins in the jar
+    celesta(midi('E6'), M(10, c, 1), .9, .22)
+celesta(midi('A5'), M(11, 'T_FLICK'), .8, .2)                    # glasses flicked on
+woodblock(M(12, 'T_TAP'), .22)                                # box tapped back
+horn(['C3', 'E3', 'G3'], M(12, 'T_SHUT'), .12, .35, 1800)      # door slammed
+kick(M(12, 'T_SHUT'), .35)
+horn(['Bb3', 'D4', 'F4'], M(13, 'T_HOOK'), .1, .3, 2500)       # the bag catches on the shaft
+gliss(midi('C5'), midi('F4'), M(13, 'T_SLIDE'), .38, .12)        # ...slides back to her
 
 # D  shot 14 (beats 113-121): the taxi. Chromatic build, the big hit on the splash, then a hard stop.
-hit = T(14, 2.36)
+hit = M(14, 'T_BREAK')                                     # the big hit: the water breaks on the canopy
 for i, m in enumerate(range(midi('C2'), midi('C2') + 10)):
     bass(m, bt(113 + i * .5), BEAT * .5, .5)
 horn(['E3', 'G3', 'Bb3', 'Db4'], bt(114), hit - bt(114) - .05, .16, 1500, a=.8)
@@ -357,11 +353,11 @@ mix[:, int(cut * SR):int((cut + .03) * SR)] *= np.linspace(1, 0, int(.03 * SR))
 mix[:, int((cut + .03) * SR):] = 0                         # everything stops on the cut to the lid
 
 # E  shots 15-16 (beats 121-130): the first drop. Silence, a celesta note for each drop, a soft chord.
-celesta(midi('A5'), T(15, .62), 1.8, .22)                  # into the sip hole
-for s, m in ((.92, 'F6'), (1.18, 'C6'), (1.42, 'A5'), (1.68, 'F5')):
-    celesta(midi(m), T(15, s), 1.0, .09)                   # beading on the lid
+celesta(midi('A5'), M(15, 'T1', 1), 1.8, .22)                  # into the sip hole
+for i, m in enumerate(('F6', 'C6', 'A5', 'F5')):
+    celesta(midi(m), M(15, 'T_BEADS', i), 1.0, .09)                   # beading on the lid
 keys([midi(n) for n in ('F3', 'A3', 'C4', 'E4', 'G4')], T(16, .05), 2.6, .07)
-celesta(midi('C6'), T(16, .45), 1.4, .16)                  # on his cheek
+celesta(midi('C6'), M(16, 'T_HIT'), 1.4, .16)                  # on his cheek
 for k, m in ((128, 'C2'), (129, 'D2'), (129.5, 'E2')):     # the smile, a pickup into the rain
     bass(midi(m), bt(k), BEAT * .6, .5)
 
@@ -373,10 +369,10 @@ for bar in range(3):
     for off in (0, 1.67):
         horn([midi(n) for n in CH[c]], bt(130 + bar * 4 + off), .16, .3, 3200)
 melody(M1, 130, 'brass', .3, bars=3)
-horn(['F3', 'A3', 'C4', 'F4'], T(17, .92), .12, .45, 4000)   # the red umbrella pops open
-crash(T(17, .92), .25, 1.2)
-swell(T(18, .52), .6, .28)                                 # he opens his own
-keys([midi(n) for n in ('F3', 'A3', 'C4', 'E4', 'A4')], T(18, .52), 2.0, .2)
+horn(['F3', 'A3', 'C4', 'F4'], M(17, 'T_POP'), .12, .45, 4000)   # the red umbrella pops open
+crash(M(17, 'T_POP'), .25, 1.2)
+swell(M(18, 'T_OPEN', 2), .6, .28)                                 # he opens his own
+keys([midi(n) for n in ('F3', 'A3', 'C4', 'E4', 'A4')], M(18, 'T_OPEN', 2), 2.0, .2)
 
 # G  shot 19 (beats 142-end): last word. Tiptoe pizzicato, a plop, the pounce, a button.
 tip = ['D4', 'F4', 'A4', 'F4', 'D4', 'F4', 'Bb4', 'F4']
@@ -384,14 +380,14 @@ for i in range(10):
     pizz(midi(tip[i % 8]), bt(142 + i * .5), .22)
 for k in range(5):
     pizz(midi('D2') if k % 2 == 0 else midi('A1'), bt(142 + k), .35, -.2)
-horn(['D2'], T(19, 1.0), .35, .3, 500)                     # plop, on the cat
+horn(['D2'], M(19, 'T_POOP'), .35, .3, 500)                     # plop, on the cat
 for i, m in enumerate(['D4', 'E4', 'F4', 'G4', 'A4', 'Bb4', 'C5', 'D5']):
-    pizz(midi(m), T(19, 1.95) + i * .05, .2)               # the climb
+    pizz(midi(m), M(19, 'T_CLIMB') + i * .05, .2)               # the climb
 for i in range(int(.46 / .035)):
-    pizz(midi('A4'), T(19, 2.4) + i * .035, .06 + .12 * i / 13)   # the crouch
-crash(T(19, 2.95), .35, 1.5)                               # the pounce
-horn(['D3', 'F3', 'Ab3', 'B3'], T(19, 2.95), .25, .45, 2000)
-gliss(midi('A6'), midi('A4'), T(19, 3.05), .7, .12)        # feathers
+    pizz(midi('A4'), M(19, 'T_CROUCH') + .05 + i * .035, .06 + .12 * i / 13)   # the crouch
+crash(M(19, 'T_POUNCE') + .1, .35, 1.5)                               # the pounce
+horn(['D3', 'F3', 'Ab3', 'B3'], M(19, 'T_POUNCE') + .1, .25, .45, 2000)
+gliss(midi('A6'), midi('A4'), M(19, 'T_POUNCE') + .2, .7, .12)        # feathers
 button = bt(150)
 horn(['F2', 'F3', 'A3', 'C4', 'D4', 'F4'], button, .12, .5, 4000)
 kick(button, .5)

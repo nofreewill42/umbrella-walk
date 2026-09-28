@@ -278,6 +278,7 @@ def clap(f=1393, bw=593.8, tau=.001078, click=.1901, body=0, seed=None):
 
 
 def claps(n=5, interval=.262, **kw):
+    """n claps, `interval` s apart (0.262 s is the bystander's clapping rhythm in the picture)"""
     seed = kw.pop('seed', None)
     rng = np.random.default_rng(seed)
     y = np.zeros(_n(interval * n + .1))
@@ -351,6 +352,7 @@ def voice_yay(f0=315.7, peak=.2038, d=.9331, rise=.9806, fall=.5375, breath=.892
 
 
 def kids_cheer(kids=2, spread=.2522, **kw):
+    """a few children cheering (voice_yay each, a little apart, each a different pitch)"""
     seed = kw.pop('seed', None)
     rng = np.random.default_rng(seed)
     d = kw.get('d', voice_yay.__defaults__[2])

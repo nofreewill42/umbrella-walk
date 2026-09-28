@@ -59,8 +59,7 @@ def main():
 
     check_tools()
     build()
-    timing = json.loads((ROOT / 'audio' / 'cuts.json').read_text())
-    cuts, names = timing['cuts'], timing['names']
+    from timeline import CUTS as cuts, NAMES as names
     n = len(cuts) - 1
     shots = args.shots or list(range(1, n + 1))
     bad = [k for k in shots if not 1 <= k <= n]
