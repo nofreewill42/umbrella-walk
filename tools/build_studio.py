@@ -42,8 +42,9 @@ from timeline import DATA as TL, CUTS, FPS  # noqa: E402
 SR = 44100
 OUT_SR = 48000
 
+STAR = re.search(r"const STAR = '(\w+)'", (ROOT / 'src' / 'hero.js').read_text(encoding='utf-8')).group(1)   # who plays the hero
 NICE = {
-    'hero': 'The man', 'dandy': 'The gentleman', 'scootKid': 'Scooter kid', 'postman': 'Postman', 'reader': 'Bench reader',
+    'hero': 'The frog' if STAR == 'frog' else 'The man', 'dandy': 'The gentleman', 'scootKid': 'Scooter kid', 'postman': 'Postman', 'reader': 'Bench reader',
     'butcher': 'Butcher', 'catGirl': 'Girl', 'pondBoy': 'Pond boy', 'pondGirl': 'Pond girl', 'worker': 'Site worker',
     'iceKid': 'Ice-cream kid', 'vendor': 'Ice-cream seller', 'painter': 'Painter', 'driver': 'Van driver', 'thief': 'Thief',
     'lady': 'Old lady', 'b1': 'Bystander in a suit', 'b2': 'Bystander 2', 'b3': 'Bystander 3', 'b4': 'Bystander 4',

@@ -2,7 +2,7 @@
 
 ![A frame from the taxi shot](docs/poster.jpg)
 
-A 76-second 2D cartoon: a man in a long black coat walks through the city with a closed umbrella and a coffee, and quietly fixes everyone's little disasters on the way. Every frame is drawn by code, and there are no image or video assets. You render the film yourself with one command.
+A 76-second 2D cartoon: a frog drawn in ballpoint pen walks through the city with a closed umbrella and a coffee, and quietly fixes everyone's little disasters on the way. Every frame is drawn by code, and there are no image or video assets: the frog is his drawing's own pen lines, traced into the code (see [The hero](docs/ANIMATION.md#the-hero)). You render the film yourself with one command.
 
 - 1920×1080, 24 fps, 1,839 frames, 19 shots
 - Plain JavaScript drawing on an HTML canvas, rendered by headless Chromium and encoded by ffmpeg
@@ -88,7 +88,7 @@ The music the film was originally cut to is **not** in this repository (it came 
 python3 tools/build_studio.py     # -> out/studio.html, one file that opens in any browser
 ```
 
-The studio is the film taken apart into what it is made of: 19 acts, their named moments, about 70 actors (the man, the cat, the dog, the butcher, the top hat, trees, walls, the camera…) each with a skeleton you can drag, and all 360 sounds, each with its spectrum. Click anything, pose it on any frame, move a moment, paint on a sound's spectrum, draw on the picture, write what you want, attach pictures or recordings. **Brief** turns all of it into instructions for an agent. See [docs/STUDIO.md](docs/STUDIO.md).
+The studio is the film taken apart into what it is made of: 19 acts, their named moments, about 70 actors (the frog, the cat, the dog, the butcher, the top hat, trees, walls, the camera…) each with a skeleton you can drag, and all 360 sounds, each with its spectrum. Click anything, pose it on any frame, move a moment, paint on a sound's spectrum, draw on the picture, write what you want, attach pictures or recordings. **Brief** turns all of it into instructions for an agent. See [docs/STUDIO.md](docs/STUDIO.md).
 
 ## Change it
 

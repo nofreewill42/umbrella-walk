@@ -1,5 +1,9 @@
 // ===== the hero: one locked model sheet =====
-// Right hand = coffee, left hand = umbrella. No glasses. Brown chelsea boots. Coat to mid-shin.
+// Who plays him: 'frog' draws the ink frog from art/frog on this skeleton (src/frog.js); 'man' draws the man below.
+// Either way every joint, hand and foot is where this file puts it, so all the shots play the same.
+const STAR = 'frog';
+const HE = STAR === 'frog' ? { The: 'The frog', the: 'the frog' } : { The: 'The man', the: 'the man' };   // for the shots' notes
+// Right hand = coffee, left hand = umbrella. The man: no glasses, brown chelsea boots, coat to mid-shin.
 const HERO = {
   thigh: .47, shin: .46, torso: .56, upper: .31, fore: .29,
   coat: '#1f232a', coatDk: '#171a20', coatHi: '#2e3440', shirt: '#f4f2ec', shirtSh: '#dcd9d2', tie: '#131519',
@@ -216,7 +220,7 @@ function heroSide(ctx, p) {
   if (sipT > 0) {
     const r = arms.R, J0 = add(Sh, [-.005 * f, -.035]);
     const E0 = add(J0, dn(r.sh, f), Hr.upper), W0 = add(E0, dn(r.sh + r.el, f), Hr.fore), H0 = add(W0, dn(r.sh + r.el + (r.wr || 0), f), .035);
-    arms = Object.assign({}, arms, { R: heroArmIK(Sh, mix(H0, add(Sh, [.148 * f, .073]), E.io(sipT)), f) });
+    arms = Object.assign({}, arms, { R: heroArmIK(Sh, mix(H0, STAR === 'frog' ? FROG.sipSide(Hp, Sh, f) : add(Sh, [.148 * f, .073]), E.io(sipT)), f) });
   }
   const sipOn = p.sip || sipT > .3;
   const armFK = a => {
@@ -229,6 +233,7 @@ function heroSide(ctx, p) {
   const AR = armFK(arms.R), AL = armFK(arms.L);
   out.handR = AR.Hc; out.handL = AL.Hc;
   if (p.measure) return out;
+  if (STAR === 'frog') { out.head = FROG.side(ctx, p, { f, Hp, Sh, L, fa: legs.map(l => l.fa || 0), AR, AL, nearR: f === -1, sipT, sipOn }); return out; }
 
   const drawLeg = (l, far, isLeft) => {
     limb(ctx, [Hp, l.K, l.A], .094, far ? Hr.trouDk : Hr.trou);
@@ -389,7 +394,7 @@ function heroFront(ctx, p) {
     const r = arms.R, J = [Sh[0] - .165, Sh[1] - .03];
     const El0 = add(J, [-Math.sin(r.sh), -Math.cos(r.sh)], Hr.upper * (r.fu || 1)), Wr0 = add(El0, [-Math.sin(r.sh + r.el), -Math.cos(r.sh + r.el)], Hr.fore * (r.ff || 1));
     const headC = [Sh[0] + (p.headX || 0), Sh[1] + .23];
-    arms = Object.assign({}, arms, { R: frontArmIK(Sh, mix(Wr0, [headC[0] - .012, headC[1] - .215], E.io(sipT)), -1) });
+    arms = Object.assign({}, arms, { R: frontArmIK(Sh, mix(Wr0, STAR === 'frog' ? FROG.sipFront(hp, Sh, p) : [headC[0] - .012, headC[1] - .215], E.io(sipT)), -1) });
   }
   const armFK = (a, s) => {
     const J = [Sh[0] + s * .165, Sh[1] - .03];
@@ -400,6 +405,14 @@ function heroFront(ctx, p) {
   const AR = armFK(arms.R, -1), AL = armFK(arms.L, 1);
   out.handR = AR.Wr; out.handL = AL.Wr;
   if (p.measure) return out;
+  if (STAR === 'frog') {
+    const hcOf = A => { const d = [A.Wr[0] - A.El[0], A.Wr[1] - A.El[1]], l = Math.hypot(d[0], d[1]) || 1; return add(A.Wr, [d[0] / l, d[1] / l], .035); };
+    AR.hc = hcOf(AR); AL.hc = hcOf(AL);
+    out.cup = p.cupAt || [AR.hc[0] + .01, AR.hc[1] + .02];
+    out.head = FROG.front(ctx, p, { hip: hp, Sh, LEG, AR, AL, sipT });
+    if (p.after) p.after(out);
+    return out;
+  }
   // legs
   LEG.forEach((l, li) => {
     limb(ctx, [l.H0, l.K, l.A], .098, Hr.trou);
@@ -516,6 +529,15 @@ function heroBack(ctx, p) {
   const ph = p.phase || 0, walking = p.walk || 0;
   const hipY = y + 1.0 + (walking ? .015 * Math.cos(TAU * ph * 2) : 0);
   const out = {};
+  if (STAR === 'frog') {
+    const LEG = [-1, 1].map((s, i) => { const lift = walking ? Math.max(0, Math.sin(TAU * (ph + i * .5))) * .1 : 0; const A = [x + s * .09, y + .075 + lift]; return { s, H0: [x + s * .085, hipY], A, K: [x + s * .09, lerp(A[1], hipY, .5)] }; });
+    const Sh = [x, hipY + Hr.torso], arms = p.barms || { L: { sh: .1, el: 0 }, R: { sh: .1, el: 0 } };
+    const armFK = (a, s) => { const J = [Sh[0] + s * .19, Sh[1] - .03]; const El = add(J, [s * Math.sin(a.sh), -Math.cos(a.sh)], Hr.upper); const Wr = add(El, [s * Math.sin(a.sh + a.el), -Math.cos(a.sh + a.el)], Hr.fore); return { J, El, Wr }; };
+    const AL = armFK(arms.L, -1), AR = armFK(arms.R, 1);
+    out.handL = AL.Wr; out.handR = AR.Wr; out.Sh = Sh;
+    out.head = FROG.back(ctx, p, { hip: [x, hipY], Sh, LEG, AL, AR });
+    return out;
+  }
   // legs
   [-1, 1].forEach((s, i) => {
     const lift = walking ? Math.max(0, Math.sin(TAU * (ph + i * .5))) * .1 : 0;
