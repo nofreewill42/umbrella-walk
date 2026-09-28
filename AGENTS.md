@@ -19,6 +19,7 @@ python3 -m playwright install chromium     # add --with-deps on a fresh Linux bo
 | Stills at chosen seconds | `python3 tools/preview.py --shot 9 --at 1.9 2.2 2.9` |
 | Re-render just some shots | `python3 tools/render_film.py --shots 6 9` (to `out/shots/`) |
 | Render the whole film | `python3 tools/render_film.py` (to `out/umbrella_walk.mp4`) |
+| Temp soundtrack with the hit points | `python3 tools/guide_track.py`, then `render_film.py --audio audio/guide.wav` |
 
 `preview.py` writes `out/preview.jpg`. **Always open that image and look at it** after a change. Most mistakes in this film are visual, and only show up in the picture. A full render takes ~3 minutes on 4 cores; a preview takes seconds.
 

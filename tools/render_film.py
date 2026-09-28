@@ -54,6 +54,7 @@ def main():
     ap.add_argument('--shots', type=int, nargs='+', help='render only these shots (1-based), each to its own file')
     ap.add_argument('--workers', type=int, default=min(os.cpu_count() or 2, 6))
     ap.add_argument('--out', default=str(ROOT / 'out' / 'umbrella_walk.mp4'), help='output file for the whole film')
+    ap.add_argument('--audio', help='use this audio file instead of audio/soundtrack.* (e.g. audio/guide.wav)')
     args = ap.parse_args()
 
     check_tools()
@@ -96,7 +97,9 @@ def main():
     lst.write_text(''.join(f"file '{j[1].resolve().as_posix()}'\n" for j in jobs))
     silent = seg_dir / 'film_silent.mp4'
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', str(lst), '-c', 'copy', str(silent)], check=True)
-    music = soundtrack()
+    music = pathlib.Path(args.audio) if args.audio else soundtrack()
+    if music and not music.exists():
+        fail(f'audio file not found: {music}')
     if music:
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(silent), '-i', str(music), '-map', '0:v:0', '-map', '1:a:0',
                         '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', str(out)], check=True)

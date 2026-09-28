@@ -73,6 +73,8 @@ The contact sheet goes to `out/preview.jpg`. To re-render only what you changed,
 
 The cuts are timed to a specific piece of music, and **the music is not in this repository**: it came from the video this film remakes, and it isn't ours to share. If you have a soundtrack you are allowed to use, save it as `audio/soundtrack.wav` (or `.mp3`, `.m4a`, `.flac`, `.ogg`) and the render muxes it in. Without it the film renders silent. `audio/beats.json` lists the beat times the cuts were aligned to, and `audio/cuts.json` lists the cuts themselves.
 
+For a free stand-in, `python3 tools/guide_track.py` synthesises `audio/guide.wav`: a rough jazz sketch at the same tempo, with stops and hits on the picture's big moments (the chop, the umbrella snap, the taxi splash, the first raindrop, the pounce). Render with it using `python3 tools/render_film.py --audio audio/guide.wav`. It also works as an audio reference for a music generator, so a new score keeps the same structure.
+
 ## How it's built
 
 ```
