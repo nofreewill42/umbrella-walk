@@ -1,0 +1,91 @@
+<meta charset="utf-8">
+<title>Umbrella Walk Studio</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>/*STYLE*/</style>
+
+<div id="app">
+  <header id="top">
+    <div class="brand"><span class="b1">Umbrella Walk</span> <span class="b2">Studio</span></div>
+    <div class="ckpt" id="ckpt" title="The version of the film this studio was built from"></div>
+    <div class="grow"></div>
+    <div class="sync" id="sync" title="Where your changes are kept"><i></i><span>on this device</span></div>
+    <button class="btn ghost" id="bCast" title="Everyone and everything in the film (C)"><svg viewBox="0 0 20 20"><circle cx="7" cy="7" r="3"/><circle cx="14" cy="8" r="2.4"/><path d="M2 17c.6-3 2.6-4.6 5-4.6s4.4 1.6 5 4.6M11.5 16.5c.4-2 1.6-3.2 3-3.2s2.8 1.2 3.3 3.2"/></svg><span class="lb">Cast</span></button>
+    <button class="btn ghost" id="bChanges" title="All your changes and notes"><svg viewBox="0 0 20 20"><path d="M4 5h12M4 10h12M4 15h8"/></svg><span class="lb">Changes</span> <b id="nChanges">0</b></button>
+    <button class="btn accent" id="bExport" title="Hand your changes to an agent"><svg viewBox="0 0 20 20"><path d="M10 3v10M6 9l4 4 4-4M4 17h12"/></svg><span class="lb">Brief</span></button>
+  </header>
+
+  <main id="stageWrap">
+    <div id="stageBox">
+      <canvas id="stage" width="1280" height="720"></canvas>
+      <canvas id="over" width="1280" height="720"></canvas>
+      <div id="stageHint" class="hint">Click anything to select it. Drag its joints to re-pose it.</div>
+      <div id="drawBar" class="floatbar" hidden>
+        <span class="lbl">Draw</span>
+        <button class="sw on" data-c="#ffb347" style="--c:#ffb347" aria-label="Orange pen"></button>
+        <button class="sw" data-c="#6cc4ff" style="--c:#6cc4ff" aria-label="Blue pen"></button>
+        <button class="sw" data-c="#ff5d73" style="--c:#ff5d73" aria-label="Red pen"></button>
+        <button class="sw" data-c="#f4f1ea" style="--c:#f4f1ea" aria-label="White pen"></button>
+        <button class="btn tiny" id="bUndoStroke" title="Remove the last stroke on this frame">Undo stroke</button>
+      </div>
+    </div>
+    <div id="transport">
+      <button class="icon" id="bPrevEv" title="Previous moment (Shift+←)"><svg viewBox="0 0 20 20"><path d="M5 4v12M15 4l-8 6 8 6z"/></svg></button>
+      <button class="icon" id="bPrevF" title="Previous frame (←)"><svg viewBox="0 0 20 20"><path d="M13 4l-7 6 7 6"/></svg></button>
+      <button class="icon play" id="bPlay" title="Play / pause (Space)"><svg viewBox="0 0 20 20" class="pl"><path d="M6 4l10 6-10 6z"/></svg><svg viewBox="0 0 20 20" class="pa"><path d="M6 4v12M14 4v12"/></svg></button>
+      <button class="icon" id="bNextF" title="Next frame (→)"><svg viewBox="0 0 20 20"><path d="M7 4l7 6-7 6"/></svg></button>
+      <button class="icon" id="bNextEv" title="Next moment (Shift+→)"><svg viewBox="0 0 20 20"><path d="M15 4v12M5 4l8 6-8 6z"/></svg></button>
+      <div class="tc"><span id="tcTime">0:00.00</span><span id="tcFrame">f 0</span></div>
+      <div class="where" id="where"></div>
+      <div class="grow"></div>
+      <div class="tools">
+        <button class="tool on" id="tSelect" title="Select and pose (V)"><svg viewBox="0 0 20 20"><path d="M5 3l10 7-4.5 1.2L13 17l-2 1-2.4-5.8L5 15z"/></svg></button>
+        <button class="tool" id="tDraw" title="Draw on the frame (D)"><svg viewBox="0 0 20 20"><path d="M3 17l2-5 9-9 3 3-9 9zM12 5l3 3"/></svg></button>
+        <span class="sep"></span>
+        <button class="tog" id="oEdits" title="Show your edits (E). Off shows the checkpoint as it is." aria-pressed="true">Edits</button>
+        <button class="tog" id="oOnion" title="Onion skin: ghosts of the frames around this one (O)" aria-pressed="false">Onion</button>
+        <button class="tog" id="oLoop" title="Loop the current shot (L)" aria-pressed="false">Loop</button>
+        <select id="oSpeed" title="Playback speed (sound plays at 1× only)"><option value="1">1×</option><option value="0.5">½×</option><option value="0.25">¼×</option></select>
+      </div>
+    </div>
+  </main>
+
+  <aside id="insp"></aside>
+
+  <section id="tl">
+    <canvas id="tlc"></canvas>
+    <div id="tlTip" class="tip" hidden></div>
+  </section>
+
+  <div id="castDrawer" class="drawer" hidden>
+    <div class="drawerHead"><h2>Cast</h2><span class="muted">Everyone and everything that is drawn, grouped. Click to select and jump to it.</span><div class="grow"></div><button class="btn ghost" id="bCastClose">Close</button></div>
+    <div id="castBody"></div>
+  </div>
+
+  <div id="changesDrawer" class="drawer" hidden>
+    <div class="drawerHead"><h2>Changes</h2><span class="muted" id="chSummary"></span><div class="grow"></div><button class="btn ghost" id="bChangesClose">Close</button></div>
+    <div class="filmNote"><label for="filmNote">Note on the whole film</label><textarea id="filmNote" rows="2" placeholder="What should the next version do better?"></textarea></div>
+    <div id="chBody"></div>
+  </div>
+
+  <div id="briefDrawer" class="drawer" hidden>
+    <div class="drawerHead"><h2>Brief for an agent</h2><span class="muted">Everything you changed, against this checkpoint. Give it to Claude, Codex or any agent working on the repo.</span><div class="grow"></div><button class="btn ghost" id="bBriefClose">Close</button></div>
+    <div class="briefActions">
+      <button class="btn accent" id="bCopy">Copy as text</button>
+      <button class="btn" id="bSaveJson">Save file with attachments (.json)</button>
+      <label class="btn ghost" for="fImport">Open a saved file</label><input type="file" id="fImport" accept=".json,application/json" hidden>
+      <span class="muted" id="briefMsg" role="status"></span>
+    </div>
+    <pre id="briefText"></pre>
+  </div>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+  <input type="file" id="fUpload" hidden>
+</div>
+
+<script>/*FILM*/</script>
+<script>/*INSTRUMENT*/</script>
+<script type="application/json" id="studio-data">/*DATA*/</script>
+<script type="text/plain" id="studio-audio">/*AUDIO*/</script>
+<script>/*APP*/</script>

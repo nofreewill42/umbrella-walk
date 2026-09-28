@@ -1,13 +1,13 @@
 name: Render film
 
 # Renders the whole film with sound on every push that changes it (or from the Actions tab:
-# Render film -> Run workflow). The MP4 and the sound tracks appear under Artifacts on the run.
+# Render film -> Run workflow). The MP4, the studio page and the sound tracks appear under Artifacts on the run.
 
 on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['src/**', 'tools/**', 'audio/**', 'timeline.json', '.github/workflows/render.yml']
+    paths: ['src/**', 'tools/**', 'audio/**', 'studio/**', 'timeline.json', '.github/workflows/render.yml']
 
 jobs:
   render:
@@ -31,11 +31,14 @@ jobs:
           python tools/sfx_track.py
       - name: Render
         run: python tools/render_film.py --workers 4 --audio audio/guide_sfx.wav
+      - name: Studio (the film as a clickable, annotatable page)
+        run: python tools/build_studio.py
       - uses: actions/upload-artifact@v4
         with:
           name: umbrella_walk
           path: |
             out/umbrella_walk.mp4
+            out/studio.html
             audio/sfx.wav
             audio/guide_sfx.wav
           retention-days: 30

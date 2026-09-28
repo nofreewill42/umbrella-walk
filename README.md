@@ -82,6 +82,14 @@ python3 tools/render_film.py --audio audio/guide_sfx.wav
 
 The music the film was originally cut to is **not** in this repository (it came from the video this film remakes, and it isn't ours to share). The guide score keeps the same beat and hits; to use your own music, see [docs/MUSIC.md](docs/MUSIC.md). How the sound is designed, and every sound model, is in [docs/SOUND.md](docs/SOUND.md).
 
+## Direct it in the studio
+
+```bash
+python3 tools/build_studio.py     # -> out/studio.html, one file that opens in any browser
+```
+
+The studio is the film taken apart into what it is made of: 19 acts, their named moments, about 70 actors (the man, the cat, the dog, the butcher, the top hat, trees, walls, the camera…) each with a skeleton you can drag, and all 360 sounds, each with its spectrum. Click anything, pose it on any frame, move a moment, paint on a sound's spectrum, draw on the picture, write what you want, attach pictures or recordings. **Brief** turns all of it into instructions for an agent. See [docs/STUDIO.md](docs/STUDIO.md).
+
 ## Change it
 
 The film is built to be changed, by you or by a coding agent. Everything that happens has a name and a time in [`timeline.json`](timeline.json), and the drawing, the sound effects and the music hits all read it, so they stay in sync when you move things. To see it all as a cue sheet:
@@ -128,12 +136,14 @@ src/          the film (plain JS, concatenated in this order by tools/build.py)
   s3.js         shots 11-19
   main.js       renderFrame(ctx, t)
 audio/        beats.json (the beat grid), steps.json (footfalls, from probe_motion.py)
-docs/         ANIMATION.md, SOUND.md, MUSIC.md
+docs/         ANIMATION.md, SOUND.md, MUSIC.md, STUDIO.md
+studio/       the studio page: instrument.js (drawing calls -> actors), app.js, audio.js, store.js, index.html, style.css
 tools/        build.py, preview.py, render_film.py, render_segment.py      the picture
               timeline.py (the cue sheet)
               probe_motion.py, guide_track.py, sfx_track.py                the sound
               sfxdsp.py, sfxanimals.py, sfxworld.py                        the sound models
               sound_lab.py (hear one sound), ear.py (a machine ear), fit_music.py (cuts to new music)
+              build_studio.py (the studio page)
 ```
 
 `dist/` (the built script) and `out/` (stills and videos) are generated and not committed.

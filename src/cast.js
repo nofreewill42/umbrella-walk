@@ -144,7 +144,7 @@ function personSide(ctx, sp, p) {
   L = L.map(l => ({ K: add(l.K, Hp), A: add(l.A, Hp), shoe: l.shoe.map(q => add(q, Hp)) }));
   const lean = p.lean || 0;
   const Sh = add(Hp, upv(lean, f), D.torso);
-  const out = { Hp, Sh, f };
+  const out = { Hp, Sh, f, L };
   if (p.measure) { const a0 = p.arms || { near: { sh: .05, el: .1 }, far: { sh: -.05, el: .1 } }; const fk2 = a => { const J = add(Sh, [0, -D.limbW * .5]); const El = add(J, dn(a.sh, f), D.up); return add(El, dn(a.sh + a.el, f), D.fo); }; out.handN = fk2(a0.near); out.handF = fk2(a0.far); out.head = add(Sh, [(D.bw * .1 + (p.headFwd || 0)) * f, D.neck + D.head * .45]); out.L = L; return out; }
   const arms = p.arms || { near: { sh: .05, el: .1 }, far: { sh: -.05, el: .1 } };
   const armFK = a => { const J = add(Sh, [0, -D.limbW * .5]); const El = add(J, dn(a.sh, f), D.up); const Wr = add(El, dn(a.sh + a.el, f), D.fo); return { J, El, Wr }; };

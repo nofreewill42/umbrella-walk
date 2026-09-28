@@ -35,6 +35,7 @@ import sfxworld as W  # noqa: E402
 from timeline import CUTS, DUR, T, M, moment, shot_at, space as shot_space  # noqa: E402  (timing: timeline.json)
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+LOG = globals().get('LOG')                          # set by tools/build_studio.py to collect every sound
 N = int((DUR + 3) * SR)
 out = np.zeros((2, N))
 rng = np.random.default_rng(11)
@@ -116,6 +117,11 @@ def put(y, t, L=-30.0, pan=0.0, far=0.0, space=None, wet=None):
     sp = space or shot_space(shot_at(max(t, 0)))
     send = (SPACES[sp]['wet'] if wet is None else wet) * (1 + 2.5 * far)
     SENDS[sp][:, i:i + m] += y[:, :m] * send
+    if LOG is not None:                              # tools/build_studio.py: every placed sound, and the line that placed it
+        f = sys._getframe(1)
+        while f and not (f.f_code.co_name == '<module>' and f.f_code.co_filename == __file__):
+            f = f.f_back
+        LOG.append(dict(i=i, y=y[:, :m].copy(), send=send, space=sp, L=L, pan=pan, far=far, line=f.f_lineno if f else 0))
 
 
 def bed(s0, s1, gen, L, fade=.05, **kw):

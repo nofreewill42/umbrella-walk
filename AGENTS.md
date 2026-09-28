@@ -7,6 +7,7 @@ This file is the map for anyone (human or agent) who wants to change the film. T
 - [`docs/ANIMATION.md`](docs/ANIMATION.md): characters, props, sets, how a shot is built and animated
 - [`docs/SOUND.md`](docs/SOUND.md): what makes a sound in this film, and why, and the sound models
 - [`docs/MUSIC.md`](docs/MUSIC.md): the guide score, using your own music (e.g. from Suno), and re-timing the cuts to it
+- [`docs/STUDIO.md`](docs/STUDIO.md): the studio page, where people pose, re-time, annotate and draw on the film; and how to apply the brief it produces
 
 ## Setup
 
@@ -55,6 +56,7 @@ python3 tools/timeline.py --shot 9     # one shot
 | Ask the machine ear what it hears | `python3 tools/ear.py --shot 7 --from 3.4 --to 4.5`, or `--model growl --takes 12 --want Growling` |
 | Fit the cuts to new music | `python3 tools/fit_music.py my_score.wav` (add `--write` to apply) |
 | Build `dist/film.js` only | `python3 tools/build.py` (the other tools do this for you) |
+| Build the studio (click, pose, note, brief) | `python3 tools/build_studio.py` → `out/studio.html` (`--ui` when only `studio/` changed) |
 
 A preview takes seconds; a full render ~3 minutes on 4 cores. **Always open `out/preview.jpg` and look at it** after a change: most mistakes in this film are visual.
 
@@ -76,6 +78,10 @@ A preview takes seconds; a full render ~3 minutes on 4 cores. **Always open `out
 | the **music** | `tools/guide_track.py` (the sketch), or bring your own: `docs/MUSIC.md` | rebuild, render with `--audio` |
 
 To add a new event: give it a moment in `timeline.json`, add the name to that shot's `const { … } = MOMENTS('…')` line, use it in the drawing, and hang its sound on it with `M(shot, 'NAME')` in `sfx_track.py`.
+
+## When you get a studio brief
+
+A brief starts with "# Changes to The Umbrella Walk" and names a checkpoint commit. It lists, shot by shot, pose keyframes, moved moments, sound edits, notes, drawings and attachments, each with the file or line it concerns. Notes are the intent; poses and drawings are sketches of it. Implement them as real animation and sound under the rules below, then rebuild the studio so the next round starts from your version. Details: [`docs/STUDIO.md`](docs/STUDIO.md).
 
 ## How the code works
 
