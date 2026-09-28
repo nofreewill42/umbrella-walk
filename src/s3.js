@@ -116,7 +116,7 @@ shot('Painter', ...CUT(11), (ctx, t) => {
   // glasses in flight: up over his head and onto his nose, spinning
   if (t >= T_FLICK && t < T_ON) { const u = seg(t, T_FLICK, T_ON); const x = lerp(G0[0], eyeAt[0], u), y = lerp(G0[1], eyeAt[1], u) + Math.sin(Math.PI * u) * .7; specs(ctx, x, y, -TAU * 2 * E.o(u), lerp(2.2, 1.4, u)); }
   if (t > T_ON && t < T_ON + .3) { const hc = [Sh[0] + .02, Sh[1] + .16], a = E.o(seg(t, T_ON, T_ON + .08)); ctx.strokeStyle = INK; ctx.lineWidth = px(2.6); ctx.lineCap = 'round'; [[-.9, .15], [-.35, .17], [.25, .16]].forEach(([an, r]) => { const d = [Math.sin(an), Math.cos(an)]; ctx.beginPath(); ctx.moveTo(hc[0] + d[0] * r * a, hc[1] + d[1] * r * a); ctx.lineTo(hc[0] + d[0] * (r + .06) * a, hc[1] + d[1] * (r + .06) * a); ctx.stroke(); }); }
-}, { notes: 'His glasses have fallen behind his stool, so he squints and paints a park he half-remembers. The man, walking up behind him, spots them, flicks them up with the umbrella tip and onto his nose. The painter sees Westminster, startles, looks at his canvas, smiles and paints London over the park from a palette holding every colour on it, while the man stays to watch, sipping.' });
+}, { notes: `His glasses have fallen behind his stool, so he squints and paints a park he half-remembers. ${HE.The}, walking up behind him, spots them, flicks them up with the umbrella tip and onto his nose. The painter sees Westminster, startles, looks at his canvas, smiles and paints London over the park from a palette holding every colour on it, while ${HE.the} stays to watch, sipping.` });
 
 // ---------- 13. Van ----------
 shot('Van', ...CUT(12), (ctx, t) => {
@@ -190,7 +190,7 @@ shot('Van', ...CUT(12), (ctx, t) => {
   const burst = (p, t0, r0) => { if (t > t0 && t < t0 + .16) { const u = seg(t, t0, t0 + .16); ctx.strokeStyle = `rgba(40,40,40,${1 - u})`; ctx.lineWidth = px(2.6); ctx.lineCap = 'round'; for (let q = 0; q < 6; q++) { const a = q * TAU / 6 + .4; ctx.beginPath(); ctx.moveTo(p[0] + Math.cos(a) * r0, p[1] + Math.sin(a) * r0); ctx.lineTo(p[0] + Math.cos(a) * (r0 + .07 + u * .05), p[1] + Math.sin(a) * (r0 + .07 + u * .05)); ctx.stroke(); } } };
   burst(boxFace, T_TAP, .08);
   burst([vanX - 1.02, 1.4], T_SHUT, .15);
-}, { notes: 'The driver climbs into the cab from the far side, so he never sees the open side door. The engine coughs, the van shakes, and the top box starts tipping out. The man taps it back, hooks the door handle with the tip and slams the door shut just before the van pulls away, then sips.' });
+}, { notes: `The driver climbs into the cab from the far side, so he never sees the open side door. The engine coughs, the van shakes, and the top box starts tipping out. ${HE.The} taps it back, hooks the door handle with the tip and slams the door shut just before the van pulls away, then sips.` });
 
 // ---------- 14. Handbag ----------
 shot('Handbag', ...CUT(13), (ctx, t) => {
@@ -278,7 +278,7 @@ shot('Handbag', ...CUT(13), (ctx, t) => {
     // the moment it catches: a little snag accent
     if (t < T_HOOK + .12) { const u = seg(t, T_HOOK, T_HOOK + .12); ctx.strokeStyle = `rgba(40,40,40,${1 - u})`; ctx.lineWidth = px(2.4); for (let q = 0; q < 5; q++) { const a = q * TAU / 5 + .3; ctx.beginPath(); ctx.moveTo(bagP[0] + Math.cos(a) * .07, bagP[1] + Math.sin(a) * .07); ctx.lineTo(bagP[0] + Math.cos(a) * (.13 + u * .04), bagP[1] + Math.sin(a) * (.13 + u * .04)); ctx.stroke(); } }
   }
-}, { notes: 'A thief sprints past the old lady and yanks her handbag. The man holds his umbrella out level at bag height; the handle catches on the shaft, the thief’s own pull drags it down to the man’s fist and his grip fails, so he runs on empty-handed. The man tips the umbrella and the bag slides the length of the shaft into the lady’s hands.' });
+}, { notes: `A thief sprints past the old lady and yanks her handbag. ${HE.The} holds his umbrella out level at bag height; the handle catches on the shaft, the thief’s own pull drags it down to ${HE.the}’s fist and his grip fails, so he runs on empty-handed. ${HE.The} tips the umbrella and the bag slides the length of the shaft into the lady’s hands.` });
 
 // ---------- 15. Taxi ----------
 shot('Taxi', ...CUT(14), (ctx, t, T) => {
@@ -369,7 +369,7 @@ shot('Taxi', ...CUT(14), (ctx, t, T) => {
   // the taxi (nearest)
   const tx = kf(t, [[1.0, -4.3], [T_HIT, .1], [2.65, 6.8]]);
   if (t > 1.0 && t < 2.65) taxi(ctx, tx, -1.0, 1, -tx * 2.6);
-}, { notes: 'A taxi is coming for the bright puddle right in front of two women. He clocks it, hops across, crouches behind the open umbrella held face-on, and the whole sheet of water stands up and breaks on the canopy instead of on them. The same water washes the grime off the canopy and the last smear off his trouser leg. He closes it and sips.' });
+}, { notes: 'A taxi is coming for the bright puddle right in front of two women. He clocks it, hops across, crouches behind the open umbrella held face-on, and the whole sheet of water stands up and breaks on the canopy instead of on them. The same water washes the grime off the canopy and the last smear off his leg. He closes it and sips.' });
 
 // ---------- 16. Raindrop ----------
 shot('Raindrop', ...CUT(15), (ctx, t, T) => {
@@ -387,14 +387,25 @@ shot('Raindrop', ...CUT(15), (ctx, t, T) => {
   ctx.beginPath(); ctx.ellipse(cx, cy, rx, ry, 0, 0, TAU); ctx.fillStyle = '#faf8f4'; ctx.fill(); ol();
   ctx.beginPath(); ctx.ellipse(cx, cy - 18, rx * .84, ry * .8, 0, 0, TAU); ctx.fillStyle = '#efebe4'; ctx.fill(); ol(3);
   ctx.beginPath(); ctx.ellipse(cx, cy - 10, rx * .8, ry * .74, 0, 0, Math.PI); ctx.strokeStyle = 'rgba(0,0,0,.08)'; ctx.lineWidth = 10; ctx.stroke();
-  // his fingers round the cup
-  const skin = HERO.skin, skinDk = HERO.skinDk;
-  [[1330, 900, .0], [1270, 985, .05], [1225, 1062, .1]].forEach(([x, y, r], i) => { ctx.save(); ctx.translate(x, y); ctx.rotate(r - .1); ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-230, -38, 290, 76, 38) : ctx.rect(-230, -38, 290, 76); ctx.fillStyle = i % 2 ? skinDk : skin; ctx.fill(); ol(4); ctx.beginPath(); ctx.moveTo(-150, -30); ctx.quadraticCurveTo(-160, 0, -150, 30); ctx.strokeStyle = 'rgba(120,70,50,.35)'; ctx.lineWidth = 3; ctx.stroke(); ctx.beginPath(); ctx.ellipse(-195, -4, 24, 26, 0, 0, TAU); ctx.fillStyle = 'rgba(255,235,225,.55)'; ctx.fill(); ctx.restore(); });
-  ctx.beginPath(); ctx.moveTo(W, 820); ctx.lineTo(1420, 860); ctx.quadraticCurveTo(1380, 1000, 1400, H); ctx.lineTo(W, H); ctx.closePath(); ctx.fillStyle = skinDk; ctx.fill(); ol(4);
-  // his wrist goes into a white shirt cuff and the black coat sleeve (with a sheen so it reads on the dark street)
-  ctx.beginPath(); ctx.moveTo(1640, 810); ctx.lineTo(1700, 800); ctx.quadraticCurveTo(1668, 960, 1690, H); ctx.lineTo(1628, H); ctx.quadraticCurveTo(1610, 960, 1640, 810); ctx.closePath(); ctx.fillStyle = '#f4f2ee'; ctx.fill(); ol(4);
-  ctx.beginPath(); ctx.moveTo(1690, 780); ctx.lineTo(W, 740); ctx.lineTo(W, H); ctx.lineTo(1680, H); ctx.quadraticCurveTo(1655, 960, 1690, 780); ctx.closePath(); ctx.fillStyle = '#2a2e36'; ctx.fill(); ol(4);
-  ctx.strokeStyle = 'rgba(160,170,190,.35)'; ctx.lineWidth = 8; ctx.beginPath(); ctx.moveTo(1730, 800); ctx.quadraticCurveTo(1712, 940, 1730, H); ctx.stroke();
+  if (STAR === 'frog') {
+    // his inked fingers round the cup, his arm going off to the lower right: the drawing, close up
+    const sc = 1.3 / FROG.K;                         // 1.3 screen px per pixel of the drawing
+    ctx.save(); ctx.translate(1415, 905); ctx.scale(sc, -sc);
+    const h = FROG.handAt([0, 0], [1, -.18], 1), d = Math.hypot(1, .18), L = FROG.TB.arm.L * FROG.K;
+    const root = [h.W[0] + L / d, h.W[1] - .18 * L / d];
+    FROG.tube(ctx, FROG.TB.arm, root, mix(root, h.W, .5), h.W, 1, FROG.PAPER);
+    FROG.drawHand(ctx, h, FROG.PAPER);
+    ctx.restore();
+  } else {
+    // his fingers round the cup
+    const skin = HERO.skin, skinDk = HERO.skinDk;
+    [[1330, 900, .0], [1270, 985, .05], [1225, 1062, .1]].forEach(([x, y, r], i) => { ctx.save(); ctx.translate(x, y); ctx.rotate(r - .1); ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-230, -38, 290, 76, 38) : ctx.rect(-230, -38, 290, 76); ctx.fillStyle = i % 2 ? skinDk : skin; ctx.fill(); ol(4); ctx.beginPath(); ctx.moveTo(-150, -30); ctx.quadraticCurveTo(-160, 0, -150, 30); ctx.strokeStyle = 'rgba(120,70,50,.35)'; ctx.lineWidth = 3; ctx.stroke(); ctx.beginPath(); ctx.ellipse(-195, -4, 24, 26, 0, 0, TAU); ctx.fillStyle = 'rgba(255,235,225,.55)'; ctx.fill(); ctx.restore(); });
+    ctx.beginPath(); ctx.moveTo(W, 820); ctx.lineTo(1420, 860); ctx.quadraticCurveTo(1380, 1000, 1400, H); ctx.lineTo(W, H); ctx.closePath(); ctx.fillStyle = skinDk; ctx.fill(); ol(4);
+    // his wrist goes into a white shirt cuff and the black coat sleeve (with a sheen so it reads on the dark street)
+    ctx.beginPath(); ctx.moveTo(1640, 810); ctx.lineTo(1700, 800); ctx.quadraticCurveTo(1668, 960, 1690, H); ctx.lineTo(1628, H); ctx.quadraticCurveTo(1610, 960, 1640, 810); ctx.closePath(); ctx.fillStyle = '#f4f2ee'; ctx.fill(); ol(4);
+    ctx.beginPath(); ctx.moveTo(1690, 780); ctx.lineTo(W, 740); ctx.lineTo(W, H); ctx.lineTo(1680, H); ctx.quadraticCurveTo(1655, 960, 1690, 780); ctx.closePath(); ctx.fillStyle = '#2a2e36'; ctx.fill(); ol(4);
+    ctx.strokeStyle = 'rgba(160,170,190,.35)'; ctx.lineWidth = 8; ctx.beginPath(); ctx.moveTo(1730, 800); ctx.quadraticCurveTo(1712, 940, 1730, H); ctx.stroke();
+  }
   // sip hole
   const hx = cx + 300, hy = cy + 95;
   ctx.save(); ctx.translate(hx, hy); ctx.rotate(-.35);
@@ -426,11 +437,39 @@ shot('Raindrop', ...CUT(15), (ctx, t, T) => {
 }, { olw: 4, notes: 'Close on his coffee lid, his fingers round the cup. The first raindrop falls straight into the sip hole, the one thing the umbrella couldn’t stop, and a little crown of coffee jumps out. The next drops bead on the plastic lid.' });
 
 // ---------- 17. Face ----------
+// the frog's close-up: his whole head fills the frame; the drop lands on his cheek, runs down it like a tear,
+// his eyes go down to it and then up at the sky as he lifts his head, still smiling (he was drawn smiling)
+function frogFace(ctx, t, T) {
+  const { T_HIT } = MOMENTS('Face');
+  camera(ctx, 0, .02, 1150);
+  const rise = kf(t, [[.95, 0], [1.35, 1, E.io]]);
+  const at = [0, -.2 + rise * .025], ang = lerp(.02, -.035, rise);
+  const body = [at[0], at[1] - (FROG.D.neck.end[1]) * FROG.K];
+  FROG.tube(ctx, FROG.TB.neck, add(body, [0, FROG.D.neck.root[1] * FROG.K]), mix(add(body, [0, FROG.D.neck.root[1] * FROG.K]), at, .5), at, 1, FROG.PAPER);
+  FROG.piece(ctx, FROG.PC.body, body, 0, 1, FROG.PAPER);
+  const hitP = FROG.headPoint(at, ang, 1, FROG.D.head.cheek);
+  const look = t < T_HIT - .25 ? { lookX: 0, lookY: 0 } : t < 1.0 ? { lookX: .75, lookY: -.55 } : { lookX: lerp(.75, .1, seg(t, 1.0, 1.3)), lookY: lerp(-.55, .95, E.io(seg(t, 1.0, 1.35))) };
+  FROG.head(ctx, at, ang, 1, look);
+  const k = 1.9;                                          // the drop at the same size on screen as in the man's close-up
+  const drop = (x, y, a) => { ctx.save(); ctx.globalAlpha = a; ctx.beginPath(); ctx.moveTo(x, y + .014 * k); ctx.quadraticCurveTo(x + .007 * k, y - .002 * k, x, y - .007 * k); ctx.quadraticCurveTo(x - .007 * k, y - .002 * k, x, y + .014 * k); ctx.fillStyle = 'rgba(215,232,244,.95)'; ctx.fill(); st(ctx, OLW * .5, 'rgba(80,110,140,.9)'); ctx.fillStyle = '#fff'; circ(ctx, x - .002 * k, y, .0018 * k); ctx.fill(); ctx.restore(); };
+  if (t < T_HIT && t > .12) {
+    const u = seg(t, .12, T_HIT), y = lerp(.45, hitP[1], E.i(u)), x = hitP[0] + .005;
+    ctx.strokeStyle = 'rgba(225,238,248,.5)'; ctx.lineWidth = px(5); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x, y + .06 * k); ctx.lineTo(x, y + .015 * k); ctx.stroke();
+    drop(x, y, 1);
+  }
+  if (t > T_HIT && t < T_HIT + .18) { const u = seg(t, T_HIT, T_HIT + .18); ctx.fillStyle = `rgba(225,238,248,${1 - u})`; for (let i = 0; i < 7; i++) { const a = i * .9 + .3; circ(ctx, hitP[0] + Math.cos(a) * .012 * k * (1 + u * 2.2), hitP[1] + Math.sin(a) * .01 * k * (1 + u * 2.2), .0035 * k); ctx.fill(); } }
+  // then it runs down his cheek like a tear, and drips off
+  if (t > T_HIT && t < 1.85) {
+    const u = seg(t, T_HIT + .05, 1.55), drip = Math.max(0, t - 1.55);
+    drop(hitP[0] - u * .02, hitP[1] - .11 * E.io(u) - 1.6 * drip * drip, 1 - seg(t, 1.7, 1.85));
+  }
+}
 shot('Face', ...CUT(16), (ctx, t, T) => {
   skyFill(ctx, '#aeb7bf', '#c6ccd0');
   screen(ctx);
   ctx.save(); ctx.filter = 'blur(30px)'; ctx.fillStyle = '#9aa4ad'; ctx.fillRect(100, 300, 380, 900); ctx.fillRect(1500, 200, 300, 900); ctx.fillStyle = '#b2433d'; ctx.fillRect(1620, 420, 160, 500); ctx.fillStyle = '#e8d9a0'; ctx.beginPath(); ctx.arc(330, 250, 40, 0, TAU); ctx.fill(); ctx.restore();
   rainLayer(ctx, T, 70, { alpha: .55, len: 110, speed: 2400, seed: 12, width: 2.4 });
+  if (STAR === 'frog') return frogFace(ctx, t, T);
   camera(ctx, 0, -.02, 2200);
   const rise = kf(t, [[.95, 0], [1.35, 1, E.io]]);
   const hc = [0, .03 + rise * .012];
@@ -461,7 +500,7 @@ shot('Face', ...CUT(16), (ctx, t, T) => {
   const hitP = [hc[0] + .053, hc[1] - .035];
   if (t < T_HIT) { const u = seg(t, .12, T_HIT); const y = lerp(.3, hitP[1], E.i(u)), x = hitP[0] + .005; if (t > .12) { ctx.strokeStyle = 'rgba(225,238,248,.5)'; ctx.lineWidth = px(5); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x, y + .06); ctx.lineTo(x, y + .015); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x, y + .014); ctx.quadraticCurveTo(x + .007, y - .002, x, y - .007); ctx.quadraticCurveTo(x - .007, y - .002, x, y + .014); ctx.fillStyle = 'rgba(215,232,244,.95)'; ctx.fill(); st(ctx, OLW * .5, 'rgba(80,110,140,.9)'); } }
   if (t > T_HIT && t < T_HIT + .18) { const u = seg(t, T_HIT, T_HIT + .18); ctx.fillStyle = `rgba(225,238,248,${1 - u})`; for (let k = 0; k < 7; k++) { const a = k * .9 + .3; circ(ctx, hitP[0] + Math.cos(a) * .012 * (1 + u * 2.2), hitP[1] + Math.sin(a) * .01 * (1 + u * 2.2), .0035); ctx.fill(); } }
-}, { olw: 5, vign: .34, notes: 'A raindrop comes down, tracked, and lands on his cheekbone. He blinks, it runs down like a tear, he looks up at the sky and the corner of his mouth lifts and stays there. Coat, shirt collar and tie are all clothing: no bare V at the neck.' });
+}, { olw: 5, vign: .34, notes: STAR === 'frog' ? 'A raindrop comes down, tracked, and lands on his cheek. It runs down like a tear; his eyes go down to it, then up at the sky as he lifts his head, still smiling the smile he was drawn with.' : 'A raindrop comes down, tracked, and lands on his cheekbone. He blinks, it runs down like a tear, he looks up at the sky and the corner of his mouth lifts and stays there. Coat, shirt collar and tie are all clothing: no bare V at the neck.' });
 
 // ---------- 18. Stance ----------
 // the same four bystanders as the taxi shot, going into their rain poses (k: 0 dry .. 1 covered)
@@ -611,7 +650,7 @@ shot('Exit', ...CUT(18), (ctx, t, T) => {
   ctx.restore();
   rainLayer(ctx, T, 200, { alpha: .42, len: 60, speed: 2200, seed: 9 });
   if (open > .9 && t < 1.92) { const r = rng(Math.floor(T * 14)); ctx.fillStyle = 'rgba(230,238,245,.8)'; camera(ctx, 0, cy, s); for (let i = 0; i < 10; i++) { const a = r() * Math.PI; circ(ctx, .1 + Math.cos(a) * .58 * (r() > .5 ? 1 : -1), 2.3 + r() * .1, .012); ctx.fill(); } }
-}, { notes: 'He finally opens the umbrella, slowly and properly, takes a sip and turns away. From behind you see only the shaft between his hair and the canopy: the umbrella and the coffee are held in front of him. The orange cat is sheltering under a tree across the street.' });
+}, { notes: 'He finally opens the umbrella, slowly and properly, takes a sip and turns away. From behind you see only the shaft between his head and the canopy: the umbrella and the coffee are held in front of him. The orange cat is sheltering under a tree across the street.' });
 
 // ---------- 20. Last word ----------
 shot('Last word', ...CUT(19), (ctx, t, T) => {
@@ -663,4 +702,4 @@ shot('Last word', ...CUT(19), (ctx, t, T) => {
   if (t > T_POUNCE[1] - .02) { const u = t - (T_POUNCE[1] - .02), r = rng(4); for (let k = 0; k < 14; k++) { const a = r() * TAU, v = .12 + r() * .22; const x = branchEnd[0] + Math.cos(a) * v * Math.min(u, .25) * 4 + Math.sin(u * 5 + k) * .02, y = branchEnd[1] + .03 + Math.sin(a) * v * Math.min(u, .25) * 4 - Math.max(0, u - .25) * .1; if (y < TY - .05) continue; local(ctx, x, y, u * 3 + k); ctx.beginPath(); ctx.moveTo(-.045, 0); ctx.quadraticCurveTo(0, .02, .045, 0); ctx.quadraticCurveTo(0, -.015, -.045, 0); fs(ctx, k % 3 ? '#eef0f3' : '#6f7888', OLW * .7); ctx.restore(); } }
   if (t > T_POUNCE[1] - .02 && t < T_POUNCE[1] + .15) { const u = seg(t, T_POUNCE[1] - .02, T_POUNCE[1] + .15); ctx.strokeStyle = `rgba(40,40,40,${1 - u})`; ctx.lineWidth = px(3); for (let q = 0; q < 8; q++) { const a = q * TAU / 8; ctx.beginPath(); ctx.moveTo(branchEnd[0] + Math.cos(a) * .07, branchEnd[1] + .05 + Math.sin(a) * .07); ctx.lineTo(branchEnd[0] + Math.cos(a) * (.13 + u * .05), branchEnd[1] + .05 + Math.sin(a) * (.13 + u * .05)); ctx.stroke(); } }
   rainLayer(ctx, T, 170, { alpha: .4, len: 70, speed: 2200, seed: 9 });
-}, { notes: 'The same pigeon, still wearing its own dropping from the bench, finally scores a hit: on the cat sheltering under a tree. It lands on a branch to gloat. The cat glares, climbs, waits, and pounces. Feathers: the pigeon just gets away, flapping for its life, and the cat is left on the branch with one tail feather. It stares after it, feather in its mouth, while the man walks off into the rain.' });
+}, { notes: `The same pigeon, still wearing its own dropping from the bench, finally scores a hit: on the cat sheltering under a tree. It lands on a branch to gloat. The cat glares, climbs, waits, and pounces. Feathers: the pigeon just gets away, flapping for its life, and the cat is left on the branch with one tail feather. It stares after it, feather in its mouth, while ${HE.the} walks off into the rain.` });

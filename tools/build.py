@@ -2,7 +2,7 @@
 """Concatenate the film sources in src/ into one script, dist/film.js.
 
 The sources share one global scope, so the order matters: core helpers first,
-then the hero rig, the cast, props and the shared library, then the three
+then the hero rig (and the frog who plays him), the cast, props and the shared library, then the three
 files of shots, then the timeline in main.js.
 """
 import json
@@ -10,7 +10,7 @@ import pathlib
 import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-ORDER = ['core', 'hero', 'cast', 'props', 'lib', 's1', 's2', 's3', 'main']
+ORDER = ['core', 'hero', 'frog_ink', 'frog', 'cast', 'props', 'lib', 's1', 's2', 's3', 'main']
 
 
 def build(quiet=False):

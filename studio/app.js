@@ -1629,7 +1629,7 @@ function toast(msg) { const t = document.getElementById('toast'); if (!t) return
     const hook = tlShot(9).moments.T_HOOK, sniff = tlShot(7).moments.T_SNIFF;
     const ex = [
       { id: 'note:act:3', kind: 'note', target: { type: 'act', id: '3' }, text: 'The juggling goes on a little too long. Two pops are enough before the letters go in.' },
-      { id: 'note:event:7:T_JUMP', kind: 'note', target: { type: 'event', id: '7:T_JUMP' }, text: 'Before she jumps down, the cat looks back at the man for a beat, as if to say thanks.' },
+      { id: 'note:event:7:T_JUMP', kind: 'note', target: { type: 'event', id: '7:T_JUMP' }, text: 'Before she jumps down, the cat looks back at him for a beat, as if to say thanks.' },
       sniff ? { id: 'note:actor:cat', kind: 'note', target: { type: 'actor', id: 'cat' }, shot: 7, frame: fr(shotT0(7) + (Array.isArray(sniff.t) ? sniff.t[0] : sniff.t)), text: 'When she sniffs the sausage: ears forward, and one slower, bigger sniff.' } : null,
       hook ? { id: 'timing:9:T_HOOK', kind: 'timing', shot: 9, moment: 'T_HOOK', from: hook.t, to: +(hook.t + 2 / FPSs).toFixed(4) } : null,
       hook ? { id: 'note:event:9:T_HOOK', kind: 'note', target: { type: 'event', id: '9:T_HOOK' }, text: 'Hook the rail two frames later, so the hop reads as a real effort.' } : null,

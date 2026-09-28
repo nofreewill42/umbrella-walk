@@ -57,6 +57,7 @@ python3 tools/timeline.py --shot 9     # one shot
 | Fit the cuts to new music | `python3 tools/fit_music.py my_score.wav` (add `--write` to apply) |
 | Build `dist/film.js` only | `python3 tools/build.py` (the other tools do this for you) |
 | Build the studio (click, pose, note, brief) | `python3 tools/build_studio.py` → `out/studio.html` (`--ui` when only `studio/` changed) |
+| Trace the frog's drawing into code again | `python3 tools/trace_character.py` → `src/frog_ink.js` (needs `pip install scikit-image`) |
 
 A preview takes seconds; a full render ~3 minutes on 4 cores. **Always open `out/preview.jpg` and look at it** after a change: most mistakes in this film are visual.
 
@@ -66,7 +67,8 @@ A preview takes seconds; a full render ~3 minutes on 4 cores. **Always open `out
 |---|---|---|
 | **when** something happens (a hit, a catch, a sip) | its moment in `timeline.json` | preview the shot; rebuild the sound; `timeline.py --shot N` shows what else hangs on it |
 | how a **character looks** (clothes, hair, colours, build, height) | `CAST.<name>` in `src/lib.js` (the fields are listed in `docs/ANIMATION.md`) | preview the shots they are in |
-| how **the hero** looks | `HERO` in `src/hero.js` (colours, limb lengths), `heroSide/heroFront/heroBack` for shape | preview a few shots |
+| **who plays the hero** | `STAR` at the top of `src/hero.js`: `'frog'` (his ink drawing, `src/frog.js`) or `'man'` | preview a few shots; the close-ups are shots 15 and 16 |
+| how **the hero** looks | the frog: `src/frog.js` (the ink comes from `art/frog/drawing.jpg` via `tools/trace_character.py`); the man: `HERO` in `src/hero.js` (colours, limb lengths), `heroSide/heroFront/heroBack` for shape | preview a few shots |
 | how an **object** looks (hat, van, taxi, scooter, pots…) | its function in `src/props.js` | preview |
 | an **animal** (dog, cat, pigeon) | `bulldog`, `cat`, `pigeon` in `src/cast.js` | preview |
 | how someone **moves** in a shot | the shot's code: `shot('Name', …)` in `src/s1.js` (1-5), `s2.js` (6-10), `s3.js` (11-19), mostly `kf()` keyframes | preview at 0.1 s steps, re-run `probe_motion.py` if feet move |
@@ -105,7 +107,7 @@ These came from the director's notes. Check every change against them:
 2. **The fix beats the failure.** The solution has to be smarter than what would have happened anyway. Nobody loses momentum, and one move often does two jobs.
 3. **Readable on a phone.** Key props and actions must be big and held long enough. Keep it short where nothing happens, and move closer where it matters.
 4. **Drawing sanity.** Check each of these:
-   - Umbrella in his left hand, coffee in his right. They never merge into one fist (use `CUP_LOW` when the umbrella hand is up, `CUP_HIGH` when it is low), and the coffee stays level.
+   - Umbrella in his left hand, coffee in his right (for the frog too). They never merge into one fist (use `CUP_LOW` when the umbrella hand is up, `CUP_HIGH` when it is low), and the coffee stays level.
    - No limb, umbrella or prop passes through a body or face.
    - Nothing floats unsupported.
    - Nothing pops between frames.

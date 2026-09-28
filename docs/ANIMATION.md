@@ -68,7 +68,14 @@ A person is drawn with `personSide(ctx, CAST.name, pose)` (profile, `f: 1` facin
 
 ### The hero
 
-The hero has his own rigs in `src/hero.js` because he does the most: `heroSide` (profile, used in most shots), `heroFront` (shots 1, 14, 18) and `heroBack` (walking away in 18-19). His colours and proportions are the `HERO` object at the top of the file (`coat`, `shirt`, `tie`, `trou`, `skin`, `hair`, `boot`; `thigh`, `shin`, `torso`, `upper`, `fore` in metres).
+The hero has his own rigs in `src/hero.js` because he does the most: `heroSide` (profile, used in most shots), `heroFront` (shots 1, 14, 18) and `heroBack` (walking away in 18-19). The rigs work out his skeleton: every hip, knee, ankle, shoulder, elbow and hand. Its proportions are the `HERO` object at the top of the file (`thigh`, `shin`, `torso`, `upper`, `fore` in metres).
+
+**Who plays him** is one word at the top of `src/hero.js`: `const STAR = 'frog'` or `'man'`. Both are drawn on the same skeleton, so every shot plays the same with either:
+
+- **The frog** is a ballpoint drawing (`art/frog/drawing.jpg`). `tools/trace_character.py` traces its pen lines into polygons, `src/frog_ink.js`, and cuts them at the joints. `src/frog.js` places his head, belly, hands and feet whole, and lays the two pen lines of his neck, arms and legs along the skeleton's limbs like rubber hose. Nothing of the drawing is redrawn. To star another drawing, photograph it flat and change the coordinates in `PARTS` in the tracer.
+- **The man** is drawn in `src/hero.js` itself, in the colours of `HERO` (`coat`, `shirt`, `tie`, `trou`, `skin`, `hair`, `boot`).
+
+The two close-ups, the coffee lid (shot 15) and the face (shot 16), draw him directly, and have a version for each.
 
 He always carries the umbrella in his **left** hand and the coffee in his **right**. The tools for posing him:
 

@@ -163,7 +163,7 @@ shot('Butcher', ...CUT(6), (ctx, t) => {
   streakPath([add(cp1, [-.14, .46]), add(cp1, [.02, -.05])], 2.74, T_C1, 7);
   streakPath([add(link2, [-.03, .26]), link2, spearP], 3.14, T_SPEAR, 6);
   ctx.restore();
-}, { notes: 'The bulldog runs out with the butcher’s whole chain of sausages. The man sniffs his soiled tip and, in one clean swipe down his own shin, wipes it: the dropping goes on his trousers, the tip glints clean. He lifts the chain off the dog’s back; the dog turns and digs in, the butcher grabs the far end. Close in: one chop leaves the dog two, a ninja slash leaves it one, and the man spears the other in mid-air. The butcher gets the rest back, the dog chews, and the man walks on with a sausage on his tip.' });
+}, { notes: `The bulldog runs out with the butcher’s whole chain of sausages. ${HE.The} sniffs his soiled tip and, in one clean swipe down his own shin, wipes it: the dropping goes on his trousers, the tip glints clean. He lifts the chain off the dog’s back; the dog turns and digs in, the butcher grabs the far end. Close in: one chop leaves the dog two, a ninja slash leaves it one, and ${HE.the} spears the other in mid-air. The butcher gets the rest back, the dog chews, and ${HE.the} walks on with a sausage on his tip.` });
 
 // ---------- 8. Cat ----------
 shot('Cat', ...CUT(7), (ctx, t) => {
@@ -652,4 +652,4 @@ shot('Ice cream', ...CUT(10), (ctx, t) => {
   };
   coinArc(T_F1, ...C1, 1.05); coinArc(T_F2, ...C2, 1.05);   // high: over the vendor's head, in front of the awning, down into the jar
   [C1[1], C2[1]].forEach(ct => { if (t > ct - .02 && t < ct + .25) { const u = seg(t, ct - .02, ct + .25); ctx.strokeStyle = `rgba(255,236,160,${1 - u})`; ctx.lineWidth = px(3); for (let k = 0; k < 8; k++) { const a = k * TAU / 8; ctx.beginPath(); ctx.moveTo(jar[0] + Math.cos(a) * .12, jar[1] + .3 + Math.sin(a) * .12); ctx.lineTo(jar[0] + Math.cos(a) * (.18 + u * .1), jar[1] + .3 + Math.sin(a) * (.18 + u * .1)); ctx.stroke(); } } });
-}, { notes: 'The kid licks too eagerly and both scoops topple onto the pavement, where they stay. The man stops and flicks a big gold coin into the tip jar; the vendor gets it at once and piles two fresh scoops on the kid’s cone. The orange cat smells the dropped ice cream and runs in for it with the girl behind it; she watches the kid walk off licking, so a second coin buys her a cone, which she takes straight from the vendor’s hand.' });
+}, { notes: `The kid licks too eagerly and both scoops topple onto the pavement, where they stay. ${HE.The} stops and flicks a big gold coin into the tip jar; the vendor gets it at once and piles two fresh scoops on the kid’s cone. The orange cat smells the dropped ice cream and runs in for it with the girl behind it; she watches the kid walk off licking, so a second coin buys her a cone, which she takes straight from the vendor’s hand.` });

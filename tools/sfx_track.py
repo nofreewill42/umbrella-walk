@@ -21,6 +21,7 @@ the variation a sound classifier recognised best; S() gives every other sound it
 import argparse
 import json
 import pathlib
+import re
 import sys
 import wave
 
@@ -170,8 +171,11 @@ def patter(t0, t1, L, pan=0.0, far=0.0, fade_in=.3, fade_out=.3, **kw):
 
 # =====================================================================================
 # footsteps, from the drawings
+# the hero's feet: the man's leather boots, or the frog's bare, webbed feet (a soft wet pat: no heel, no knock)
+STAR = re.search(r"const STAR = '(\w+)'", (ROOT / 'src' / 'hero.js').read_text(encoding='utf-8')).group(1)
+HERO_FEET = (dict(heel=.08, knock=.1, thud=1.3, thud_hi=.7, sole=1.9, sole_delay=.35, scuff=.3, grit=.25), -38) if STAR == 'frog' else ({}, -36)
 SHOES = {   # multipliers on the tuned leather-shoe defaults, and a base loudness
-    'hero': ({}, -36), 'heroBack': ({}, -36),
+    'hero': HERO_FEET, 'heroBack': HERO_FEET,
     'butcher': (dict(thud=1.8, thud_hi=.8, heel=.8, knock_f=.8), -33),
     'thief': (dict(heel=.35, knock=.3, sole=1.6, scuff=2.0, sole_delay=.4, grit=1.5), -31),
     'lady': (dict(heel=1.3, heel_tau=.6, knock=1.4, knock_f=1.7, thud=.4, sole=.4), -37),
@@ -185,7 +189,7 @@ steps = json.loads((ROOT / 'audio' / 'steps.json').read_text())['steps']
 for e in steps:
     mult, base = SHOES.get(e['who'], ({}, -38))
     kw = {k: _fs_defaults[k] * m for k, m in mult.items()}
-    wet = .9 if e['shot'] >= 17 else 0
+    wet = .9 if e['shot'] >= 17 else .35 if STAR == 'frog' and e['who'].startswith('hero') else 0
     L = base - 3 + 12 * np.log10(max(e['scale'], 60) / 420) + 2.5 * np.clip(np.log2(max(e['drop'], .05) / .8), -1.5, .8)
     far = float(np.clip(1 - e['scale'] / 300, 0, .8)) if e['scale'] < 300 else 0
     put(W.footstep(wet=wet, seed=S(), **kw), e['t'], L, e['pan'] * .8, far)

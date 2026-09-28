@@ -165,7 +165,7 @@ shot('Scooter', ...CUT(2), (ctx, t) => {
   const drawPost = () => lamppost(ctx, postX, lp.y, lp.s);
   [[postZ, drawPost], [kz, drawKid], [hz, drawHero]].sort((a, b) => b[0] - a[0]).forEach(i => i[1]());
   if (t > T_TAP - .02 && t < T_TAP + .1) { const a = 1 - seg(t, T_TAP - .02, T_TAP + .1); ctx.strokeStyle = `rgba(40,40,40,${a})`; ctx.lineWidth = px(2.6); for (let k = 0; k < 5; k++) { const an = k * 1.25 + .3; ctx.beginPath(); ctx.moveTo(tapP[0] + Math.cos(an) * .05, tapP[1] + Math.sin(an) * .05); ctx.lineTo(tapP[0] + Math.cos(an) * .11, tapP[1] + Math.sin(an) * .11); ctx.stroke(); } }
-}, { notes: 'A kid scoots along with his eyes on his phone, heading straight for a lamppost. The man doesn’t stop him or break his own stride: one tap on the handlebar and the kid curves round in front of the post without losing any speed. Past it he pockets the phone, looks back and waves a thank-you.' });
+}, { notes: `A kid scoots along with his eyes on his phone, heading straight for a lamppost. ${HE.The} doesn’t stop him or break his own stride: one tap on the handlebar and the kid curves round in front of the post without losing any speed. Past it he pockets the phone, looks back and waves a thank-you.` });
 
 // ---------- 3. Postman ----------
 shot('Postman', ...CUT(3), (ctx, t) => {
@@ -331,7 +331,7 @@ shot('Pigeon', ...CUT(4), (ctx, t) => {
     dropping(ctx, dp[0], dp[1], 0, 2.5);
   }
   if (t > T_HIT && t < T_HIT + .08) { ctx.strokeStyle = '#333'; ctx.lineWidth = px(2.2); for (let k = 0; k < 5; k++) { const an = k * TAU / 5; ctx.beginPath(); ctx.moveTo(hitP[0] + Math.cos(an) * .06, hitP[1] + Math.sin(an) * .06); ctx.lineTo(hitP[0] + Math.cos(an) * .11, hitP[1] + Math.sin(an) * .11); ctx.stroke(); } }
-}, { notes: 'The pigeon comes over from behind and lets go with a lead: you see the dropping falling for his head. He glances up, lifts the umbrella over his hair, and taps it on in a neat arc into the planter by the bookshop. The pigeon lands on top of the planter tree, watches its dropping land in the soil, and glares at him. Some of it stays on the tip, and he pulls a face at it.' });
+}, { notes: 'The pigeon comes over from behind and lets go with a lead: you see the dropping falling for his head. He glances up, lifts the umbrella over his head, and taps it on in a neat arc into the planter by the bookshop. The pigeon lands on top of the planter tree, watches its dropping land in the soil, and glares at him. Some of it stays on the tip, and he pulls a face at it.' });
 
 // ---------- 5. Flowerpot + bench: the pigeon had the pot right there, and chose the man instead ----------
 shot('Flowerpot', ...CUT(5), (ctx, t) => {
@@ -439,4 +439,4 @@ shot('Flowerpot', ...CUT(5), (ctx, t) => {
     dropping(ctx, dp[0], dp[1], 0, 2.5);
   }
   if (t > T_HIT && t < T_HIT + .08) { ctx.strokeStyle = '#333'; ctx.lineWidth = px(2.2); for (let k = 0; k < 5; k++) { const an = k * TAU / 5; ctx.beginPath(); ctx.moveTo(hitP[0] + Math.cos(an) * .06, hitP[1] + Math.sin(an) * .06); ctx.lineTo(hitP[0] + Math.cos(an) * .11, hitP[1] + Math.sin(an) * .11); ctx.stroke(); } }
-}, { notes: 'A gust slides the geranium off the end of the sill, straight above a man reading on a bench; the tip catches it and pushes it home. Then the same pigeon lands on the sill right next to that pot, looks at the pot, looks down at the man, and drops one on him anyway. This time it isn’t aimed at the hero and there was a pot right there, so he flicks it straight back up onto the pigeon.' });
+}, { notes: `A gust slides the geranium off the end of the sill, straight above a man reading on a bench; the tip catches it and pushes it home. Then the same pigeon lands on the sill right next to that pot, looks at the pot, looks down at ${HE.the}, and drops one on him anyway. This time it isn’t aimed at the hero and there was a pot right there, so he flicks it straight back up onto the pigeon.` });
