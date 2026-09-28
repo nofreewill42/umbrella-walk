@@ -118,8 +118,12 @@ const Store = (() => {
     }
   }
 
+  // every change gets a short reference ([c7]) the first time it is kept, and keeps it: answers point back with it
+  const nextRef = () => 'c' + (1 + Math.max(0, ...[...map.values()].map(x => +String(x.ref || '').slice(1) || 0)));
   function put(c, opt = {}) {
-    c.updated = Date.now(); c.ck = c.ck || (SD.checkpoint.commit || 'dev');
+    if (!opt.keepTime) c.updated = Date.now();
+    c.ck = c.ck || (SD.checkpoint.commit || 'dev');
+    if (!c.ref) { const prev = map.get(c.id); c.ref = prev && prev.ref || nextRef(); }
     const before = clone(map.get(c.id) || null);
     map.set(c.id, c);
     if (opt.undo !== false) { undoS.push({ id: c.id, before, after: clone(c) }); if (undoS.length > 200) undoS.shift(); redoS.length = 0; }

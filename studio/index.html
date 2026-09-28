@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>Umbrella Walk Studio</title>
+<title>Umbrella Walk Studio 2</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -8,19 +8,21 @@
 <div id="app">
   <header id="top">
     <div class="brand"><span class="b1">Umbrella Walk</span> <span class="b2">Studio</span></div>
-    <div class="ckpt" id="ckpt" title="The version of the film this studio was built from"></div>
+    <div class="ckpt" id="ckpt" title="The version of the film this studio was built from (a git commit)"></div>
     <div class="grow"></div>
     <div class="sync" id="sync" title="Where your changes are kept"><i></i><span>on this device</span></div>
     <button class="btn ghost" id="bCast" title="Everyone and everything in the film (C)"><svg viewBox="0 0 20 20"><circle cx="7" cy="7" r="3"/><circle cx="14" cy="8" r="2.4"/><path d="M2 17c.6-3 2.6-4.6 5-4.6s4.4 1.6 5 4.6M11.5 16.5c.4-2 1.6-3.2 3-3.2s2.8 1.2 3.3 3.2"/></svg><span class="lb">Cast</span></button>
-    <button class="btn ghost" id="bChanges" title="All your changes and notes"><svg viewBox="0 0 20 20"><path d="M4 5h12M4 10h12M4 15h8"/></svg><span class="lb">Changes</span> <b id="nChanges">0</b></button>
-    <button class="btn accent" id="bExport" title="Hand your changes to an agent"><svg viewBox="0 0 20 20"><path d="M10 3v10M6 9l4 4 4-4M4 17h12"/></svg><span class="lb">Brief</span></button>
+    <button class="btn ghost" id="bChanges" title="Everything you changed and noted, in film order (R)"><svg viewBox="0 0 20 20"><path d="M4 5h12M4 10h12M4 15h8"/></svg><span class="lb">Review</span> <b id="nChanges">0</b></button>
+    <button class="btn accent" id="bExport" title="Hand your changes to an agent or an LLM"><svg viewBox="0 0 20 20"><path d="M4 10h10M10 5l5 5-5 5"/></svg><span class="lb">Hand off</span></button>
   </header>
 
   <main id="stageWrap">
+    <div id="patchBar" class="patchBar" hidden></div>
     <div id="stageBox">
       <canvas id="stage" width="1280" height="720"></canvas>
       <canvas id="over" width="1280" height="720"></canvas>
       <div id="stageHint" class="hint">Click anything to select it. Drag its joints to re-pose it.</div>
+      <div id="origBadge" class="origBadge" hidden><b>Original</b><span id="origWhy"></span></div>
       <div id="drawBar" class="floatbar" hidden>
         <span class="lbl">Draw</span>
         <button class="sw on" data-c="#ffb347" style="--c:#ffb347" aria-label="Orange pen"></button>
@@ -31,11 +33,11 @@
       </div>
     </div>
     <div id="transport">
-      <button class="icon" id="bPrevEv" title="Previous moment (Shift+←)"><svg viewBox="0 0 20 20"><path d="M5 4v12M15 4l-8 6 8 6z"/></svg></button>
+      <button class="icon" id="bPrevEv" title="Previous moment (Shift+←)"><svg viewBox="0 0 20 20"><path d="M9 6l-4 4 4 4"/><path d="M14 6.5l3.5 3.5-3.5 3.5-3.5-3.5z" fill="currentColor"/></svg></button>
       <button class="icon" id="bPrevF" title="Previous frame (←)"><svg viewBox="0 0 20 20"><path d="M13 4l-7 6 7 6"/></svg></button>
       <button class="icon play" id="bPlay" title="Play / pause (Space)"><svg viewBox="0 0 20 20" class="pl"><path d="M6 4l10 6-10 6z"/></svg><svg viewBox="0 0 20 20" class="pa"><path d="M6 4v12M14 4v12"/></svg></button>
       <button class="icon" id="bNextF" title="Next frame (→)"><svg viewBox="0 0 20 20"><path d="M7 4l7 6-7 6"/></svg></button>
-      <button class="icon" id="bNextEv" title="Next moment (Shift+→)"><svg viewBox="0 0 20 20"><path d="M15 4v12M5 4l8 6-8 6z"/></svg></button>
+      <button class="icon" id="bNextEv" title="Next moment (Shift+→)"><svg viewBox="0 0 20 20"><path d="M6 6.5l3.5 3.5-3.5 3.5-3.5-3.5z" fill="currentColor"/><path d="M11 6l4 4-4 4"/></svg></button>
       <div class="tc"><span id="tcTime">0:00.00</span><span id="tcFrame">f 0</span></div>
       <div class="where" id="where"></div>
       <div class="grow"></div>
@@ -43,7 +45,8 @@
         <button class="tool on" id="tSelect" title="Select and pose (V)"><svg viewBox="0 0 20 20"><path d="M5 3l10 7-4.5 1.2L13 17l-2 1-2.4-5.8L5 15z"/></svg></button>
         <button class="tool" id="tDraw" title="Draw on the frame (D)"><svg viewBox="0 0 20 20"><path d="M3 17l2-5 9-9 3 3-9 9zM12 5l3 3"/></svg></button>
         <span class="sep"></span>
-        <button class="tog" id="oEdits" title="Show your edits (E). Off shows the checkpoint as it is." aria-pressed="true">Edits</button>
+        <button class="tog cmp" id="oCompare" title="Hold to see the original checkpoint; click to keep showing it (hold E)" aria-pressed="false">Compare</button>
+        <button class="tog" id="oSplit" title="Original on the left, yours on the right; drag the line (S)" aria-pressed="false">Split</button>
         <button class="tog" id="oOnion" title="Onion skin: ghosts of the frames around this one (O)" aria-pressed="false">Onion</button>
         <button class="tog" id="oLoop" title="Loop the current shot (L)" aria-pressed="false">Loop</button>
         <select id="oSpeed" title="Playback speed (sound plays at 1× only)"><option value="1">1×</option><option value="0.5">½×</option><option value="0.25">¼×</option></select>
@@ -54,7 +57,23 @@
   <aside id="insp"></aside>
 
   <section id="tl">
-    <canvas id="tlc"></canvas>
+    <div id="tlResize" role="separator" aria-orientation="horizontal" aria-label="Resize the timeline" tabindex="0" title="Drag to resize. Double-click to switch between small and tall."></div>
+    <div id="tlBar">
+      <div class="seg" role="group" aria-label="How the film is cut into rows">
+        <button id="tlByShot" aria-pressed="true" title="Every shot starts a new row, like a paragraph">Shot per row</button>
+        <button id="tlByTime" aria-pressed="false" title="Every row holds the same number of seconds">Even rows</button>
+      </div>
+      <label class="rowlen" title="How many seconds one row holds (Ctrl + scroll on the timeline)"><input id="tlLen" type="range" min="0" max="1000" step="1" aria-label="Seconds per row"><span id="tlLenV">6 s</span></label>
+      <button class="tog" id="tlThumbs" aria-pressed="true" title="Show the film's frames in each row">Frames</button>
+      <div class="find"><svg viewBox="0 0 20 20"><circle cx="8.5" cy="8.5" r="5"/><path d="M12.5 12.5l4 4"/></svg><input id="tlFind" type="search" placeholder="Find a moment, sound, character or note  ( / )" autocomplete="off" spellcheck="false" aria-label="Find in the film"><span id="tlFindN" class="findN"></span></div>
+      <div class="legend" id="tlLegend" aria-label="Sound colours"></div>
+    </div>
+    <canvas id="tlShots" class="shotbar" aria-label="The whole film: click to jump"></canvas>
+    <div id="tlScroll" tabindex="-1">
+      <canvas id="tlc"></canvas>
+      <div id="tlSpace"></div>
+    </div>
+    <button id="tlBack" class="backPill" hidden></button>
     <div id="tlTip" class="tip" hidden></div>
   </section>
 
@@ -64,28 +83,155 @@
   </div>
 
   <div id="changesDrawer" class="drawer" hidden>
-    <div class="drawerHead"><h2>Changes</h2><span class="muted" id="chSummary"></span><div class="grow"></div><button class="btn ghost" id="bChangesClose">Close</button></div>
+    <div class="drawerHead"><h2>Review</h2><span class="muted" id="chSummary"></span><div class="grow"></div><button class="btn ghost" id="bChangesClose">Close</button></div>
     <div class="filmNote"><label for="filmNote">Note on the whole film</label><textarea id="filmNote" rows="2" placeholder="What should the next version do better?"></textarea></div>
     <div id="chBody"></div>
   </div>
 
   <div id="briefDrawer" class="drawer" hidden>
-    <div class="drawerHead"><h2>Brief for an agent</h2><span class="muted">Everything you changed, against this checkpoint. Give it to Claude, Codex or any agent working on the repo.</span><div class="grow"></div><button class="btn ghost" id="bBriefClose">Close</button></div>
-    <div class="briefActions">
-      <button class="btn accent" id="bCopy">Copy as text</button>
-      <button class="btn" id="bSaveJson">Save file with attachments (.json)</button>
-      <label class="btn ghost" for="fImport">Open a saved file</label><input type="file" id="fImport" accept=".json,application/json" hidden>
-      <span class="muted" id="briefMsg" role="status"></span>
+    <div class="drawerHead"><h2>Hand off</h2><span class="muted">Everything you changed, against this checkpoint, for whoever makes the next version.</span><div class="grow"></div><button class="btn ghost" id="bBriefClose">Close</button></div>
+    <div class="handoff">
+      <section class="hoCard">
+        <h3><span class="step">A</span> An agent with the repository</h3>
+        <p class="muted">Claude Code, Codex or any agent that can open <span class="mono">github.com/nofreewill42/umbrella-walk</span>. Paste the brief; it names the files, lines and rules.</p>
+        <div class="briefActions">
+          <button class="btn accent" id="bCopy">Copy the brief</button>
+          <button class="btn" id="bSaveJson">Save it with drawings and attachments</button>
+          <label class="btn ghost" for="fImport">Open a saved file</label><input type="file" id="fImport" accept=".json,application/json" hidden>
+        </div>
+        <span class="muted small" id="briefMsg" role="status"></span>
+      </section>
+      <section class="hoCard">
+        <h3><span class="step">B</span> Any chat LLM, right here</h3>
+        <p class="muted">The prompt carries the code it needs. The answer comes back as small code edits, and the studio plays them at once, next to the original.</p>
+        <div class="briefActions">
+          <button class="btn accent" id="bCopyChat">Copy the prompt</button>
+          <button class="btn" id="bAskClaude" hidden>Ask Claude here</button>
+          <span class="muted small" id="chatMsg" role="status"></span>
+        </div>
+        <label class="small muted" for="replyText">Paste the answer</label>
+        <textarea id="replyText" rows="6" placeholder="STATUS [c1] done: …&#10;&#10;src/s2.js&#10;&lt;&lt;&lt;&lt;&lt;&lt;&lt; SEARCH&#10;…&#10;=======&#10;…&#10;&gt;&gt;&gt;&gt;&gt;&gt;&gt; REPLACE" spellcheck="false"></textarea>
+        <div class="briefActions"><button class="btn accent" id="bPreview" disabled>Play these edits</button><span class="small" id="replyMsg" role="status"></span></div>
+        <div class="patchNote" id="patchNote" hidden><span></span> <button class="btn tiny ghost danger" id="bDiscard2">Discard them</button></div>
+      </section>
     </div>
-    <pre id="briefText"></pre>
+    <details class="briefWrap"><summary>Read the brief</summary><pre id="briefText"></pre></details>
   </div>
 
   <div id="toast" role="status" aria-live="polite"></div>
   <input type="file" id="fUpload" hidden>
 </div>
 
-<script>/*FILM*/</script>
-<script>/*INSTRUMENT*/</script>
+<script type="text/plain" id="film-src">/*FILM*/</script>
 <script type="application/json" id="studio-data">/*DATA*/</script>
+<script>
+// ---------------------------------------------------------------------------
+// Boot the film. Normally that is the checkpoint's own code. While you try out
+// an LLM's answer, it is that code with the answer's edits applied; if the
+// edited code does not run, the studio falls back to the checkpoint and says why.
+// ---------------------------------------------------------------------------
+const FilmPatch = (() => {
+  // film.js is src/*.js joined with "// ---- name.js ----" lines
+  function split(src) {
+    const files = {}, re = /^\/\/ ---- (\w+)\.js ----\n/mg; let m, last = null, lastEnd = 0;
+    while ((m = re.exec(src))) { if (last) files[last] = src.slice(lastEnd, m.index).replace(/\n$/, ''); last = 'src/' + m[1] + '.js'; lastEnd = m.index + m[0].length; }
+    if (last) files[last] = src.slice(lastEnd);
+    return files;
+  }
+  function join(files) { return Object.keys(files).map(f => '// ---- ' + f.replace(/^src\//, '') + ' ----\n' + files[f]).join('\n'); }
+  const norm = s => s.replace(/\r\n?/g, '\n');
+  // the SEARCH text must occur exactly once; forgive trailing spaces, then a different indent
+  function findOnce(hay, needle) {
+    const i = needle ? hay.indexOf(needle) : -1;
+    if (i >= 0) return hay.indexOf(needle, i + 1) >= 0 ? { err: 'matches more than one place' } : { i, n: needle.length };
+    const H = hay.split('\n'), N = needle.split('\n');
+    while (N.length && !N[0].trim()) N.shift();
+    while (N.length && !N[N.length - 1].trim()) N.pop();
+    if (!N.length) return { err: 'is empty' };
+    for (const eq of [(x, y) => x.trimEnd() === y.trimEnd(), (x, y) => x.trim() === y.trim()]) {
+      const hits = [];
+      for (let l = 0; l + N.length <= H.length && hits.length < 2; l++) {
+        let ok = true; for (let k = 0; k < N.length; k++) if (!eq(H[l + k], N[k])) { ok = false; break; }
+        if (ok) hits.push(l);
+      }
+      if (hits.length > 1) return { err: 'matches more than one place' };
+      if (hits.length === 1) { const l = hits[0], at = H.slice(0, l).reduce((q, x) => q + x.length + 1, 0); return { i: at, n: H.slice(l, l + N.length).join('\n').length, loose: true }; }
+    }
+    return { err: 'was not found in the code' };
+  }
+  // apply SEARCH/REPLACE blocks in order; throws with a readable message
+  function applyFiles(files, blocks) {
+    const out = Object.assign({}, files);
+    blocks.forEach((b, k) => {
+      let f = out[b.file] != null ? b.file : Object.keys(out).find(x => x.endsWith('/' + b.file.replace(/^.*\//, '')));
+      if (!f || findOnce(out[f], norm(b.search)).err) {         // no file named, or the wrong one: the code itself says where it is
+        const hits = Object.keys(out).filter(x => !findOnce(out[x], norm(b.search)).err);
+        if (hits.length === 1) f = hits[0];
+      }
+      if (!f) throw new Error(`Edit ${k + 1}: ${b.file === '?' ? 'it names no file, and its SEARCH text is not in the code' : 'there is no file ' + b.file + ' in the film\'s code'}`);
+      const r = findOnce(out[f], norm(b.search));
+      if (r.err) throw new Error(`Edit ${k + 1} (${f}): the SEARCH text ${r.err}`);
+      out[f] = out[f].slice(0, r.i) + norm(b.replace) + out[f].slice(r.i + r.n);
+    });
+    return out;
+  }
+  const apply = (src, blocks) => join(applyFiles(split(src), blocks));
+  // read an answer: STATUS lines and SEARCH/REPLACE blocks (fenced or not)
+  function parse(text) {
+    const lines = norm(text).split('\n'), blocks = [], status = [];
+    let file = null, mode = null, s = [], r = [];
+    const pathRe = /^[\s#*`>-]*(?:(?:file|path|in)\s*:?\s*)?[`*]*((?:src|tools|studio)\/[\w./-]+\.(?:js|py|json)|[\w-]+\.js)[\s*`:]*$/i;
+    for (const raw of lines) {
+      const line = mode === null ? raw.replace(/\*\*|__|`/g, '') : raw;      // chat apps like to make STATUS lines bold
+      if (mode === null) {
+        const st = line.match(/^\s*[-*]?\s*STATUS\s*\[?\s*(c\d+)\s*\]?\s*[:\-–]?\s*(done|adapted|skipped|partly|not done)\b[\s:—–-]*(.*)$/i);
+        if (st) { status.push({ ref: st[1].toLowerCase(), status: st[2].toLowerCase().replace('not done', 'skipped').replace('partly', 'adapted'), text: st[3].trim() }); continue; }
+        const pm = line.match(pathRe); if (pm) { file = pm[1]; continue; }
+        if (/^\s*<{5,9}\s*SEARCH\s*$/.test(line)) { mode = 's'; s = []; r = []; continue; }
+      } else if (mode === 's') {
+        if (/^\s*={5,9}\s*$/.test(line)) { mode = 'r'; continue; }
+        s.push(line);
+      } else if (mode === 'r') {
+        if (/^\s*>{5,9}\s*REPLACE\s*$/.test(line)) { blocks.push({ file: file || '?', search: s.join('\n'), replace: r.join('\n') }); mode = null; continue; }
+        r.push(line);
+      }
+    }
+    return { blocks, status, open: mode !== null };
+  }
+  return { split, join, apply, applyFiles, parse, findOnce };
+})();
+(() => {
+  const src = document.getElementById('film-src').textContent;
+  let patch = null, code = src;
+  try { patch = JSON.parse(localStorage.getItem('uws.patch') || 'null'); } catch (e) { }
+  const ck = (document.getElementById('studio-data').textContent.slice(0, 400).match(/"commit":"(\w*)"/) || [])[1] || 'dev';
+  if (patch && patch.checkpoint && patch.checkpoint !== ck) { window.PATCH_ERROR = 'Your saved LLM edits were made for checkpoint ' + patch.checkpoint + ', not this one (' + ck + '), so they are not applied.'; window.PATCH_FAILED = patch; patch = null; }
+  const blocks = patch && patch.replies ? patch.replies.flatMap(r => r.blocks) : [];
+  window.PATCH = null;
+  if (blocks.length) {
+    try { code = FilmPatch.apply(src, blocks); window.PATCH = patch; }
+    catch (e) { window.PATCH_ERROR = e.message; code = src; }
+  }
+  const run = c => { const s = document.createElement('script'); s.textContent = c; document.head.appendChild(s); };
+  let err = null; const onErr = e => { err = e; };
+  window.addEventListener('error', onErr);
+  run(code);
+  if (typeof FILM === 'undefined' && !err) document.write('<script>' + code.replace(/<\/script/gi, '<\\/script') + '<\/script>');   // a page that refuses injected scripts
+  window.removeEventListener('error', onErr);
+  if (err && code !== src) {
+    let msg = (err.message || 'error').replace(/^Uncaught /, '').replace(/Failed to execute 'appendChild' on 'Node': /, '');
+    if (err.error instanceof SyntaxError || /SyntaxError/.test(err.message)) {
+      try { const a = FilmPatch.split(src), b = FilmPatch.split(code); for (const f in b) if (b[f] !== a[f]) { try { new Function(b[f]); } catch (e) { msg = f + ': ' + e.message; break; } } } catch (e) { }
+      window.PATCH = null; window.PATCH_ERROR = 'The edited code does not parse (' + msg + ')'; run(src);
+    }
+    else {                                                       // it half-ran: start over without it
+      try { localStorage.setItem('uws.patchFailed', JSON.stringify({ patch, msg: 'The edited code stopped while loading: ' + msg })); localStorage.removeItem('uws.patch'); } catch (e) { }
+      location.reload();
+    }
+  }
+  try { const f = JSON.parse(localStorage.getItem('uws.patchFailed') || 'null'); if (f) { window.PATCH_ERROR = f.msg; window.PATCH_FAILED = f.patch; localStorage.removeItem('uws.patchFailed'); } } catch (e) { }
+})();
+</script>
+<script>/*INSTRUMENT*/</script>
 <script type="text/plain" id="studio-audio">/*AUDIO*/</script>
 <script>/*APP*/</script>
